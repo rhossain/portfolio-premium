@@ -1,0 +1,550 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Base ---------- */
+html {
+  scroll-behavior: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  @apply bg-ink text-paper font-sans;
+  overflow-x: hidden;
+}
+
+/* Hidden scrollbar for a clean aesthetic */
+::-webkit-scrollbar {
+  display: none;
+}
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::selection {
+  background: #b0704f;
+  color: #0a0a0a;
+}
+
+:focus-visible {
+  outline: 0.125rem solid #b0704f;
+  outline-offset: 0.125rem;
+}
+
+/* ---------- Film grain overlay ---------- */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 90;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 0.9s steps(4) infinite;
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 1.5%); }
+  50% { transform: translate(1.5%, -1%); }
+  75% { transform: translate(-1%, 2%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ---------- Custom cursor ---------- */
+@media (pointer: fine) {
+  .cursor-active,
+  .cursor-active a,
+  .cursor-active button {
+    cursor: none;
+  }
+}
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 100;
+  border-radius: 9999px;
+  mix-blend-mode: difference;
+}
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #efefef;
+}
+.cursor-ring {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(239, 239, 239, 0.7);
+  transition: width 0.35s cubic-bezier(0.83, 0, 0.17, 1),
+    height 0.35s cubic-bezier(0.83, 0, 0.17, 1),
+    background-color 0.35s;
+}
+.cursor-ring.is-hover {
+  width: 72px;
+  height: 72px;
+  background: rgba(239, 239, 239, 0.12);
+}
+@media (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* ---------- Scroll reveals ---------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(48px);
+  filter: blur(8px);
+  transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+[data-reveal].is-inview {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .grain::after {
+    animation: none;
+  }
+}
+
+/* ---------- Hero letters ---------- */
+.hero-letter-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.hero-letter {
+  display: inline-block;
+  transform: translateY(115%);
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+  line-height: 0.92;
+}
+.hero-letter.is-shown {
+  transform: translateY(0);
+}
+.hero-letter.is-physics {
+  transition: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  touch-action: none;
+}
+
+/* ---------- Marquee ---------- */
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee-x 36s linear infinite;
+  will-change: transform;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ---------- Link underline sweep ---------- */
+.u-sweep {
+  position: relative;
+}
+.u-sweep::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s cubic-bezier(0.83, 0, 0.17, 1);
+}
+.u-sweep:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------- Footer link instant inversion ---------- */
+.invert-link {
+  transition: none;
+}
+.invert-link:hover {
+  background: #141414;
+  color: #f5f2ed;
+}
+
+/* ---------- Project slider ---------- */
+.slider {
+  cursor: grab;
+  will-change: transform;
+}
+.slider.is-dragging {
+  cursor: grabbing;
+}
+.slider-track {
+  transition: transform 0.75s cubic-bezier(0.83, 0, 0.17, 1);
+}
+.slider-track.no-anim {
+  transition: none;
+}
+/*
+ * Full-page screenshot slides: each slide is a clip box; inside it a
+ * "slider-pan" wrapper is as tall as the rendered screenshot (full width,
+ * proportional height). The background fills it exactly, so nothing is
+ * distorted or cropped sideways — the page simply extends below the fold.
+ */
+.slider-img {
+  background-size: 100% 100%;
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+/*
+ * Hover "page tour": while the pointer rests on a slider, the pan wrapper of
+ * the active slide slowly translates up until the screenshot's bottom edge
+ * shows, then eases back when the pointer leaves. Travel distance and
+ * duration are measured per image in JS so every site reads at a similar
+ * perceived speed.
+ */
+.slider-pan {
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.slider-pan.panning {
+  transition: transform var(--tour-dur, 7s) cubic-bezier(0.42, 0, 0.32, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .slider-pan.panning {
+    transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+.project-orb {
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.project-card:hover .project-orb {
+  transform: translate(6%, -8%) scale(1.15);
+}
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  display: flex;
+  height: 44px;
+  width: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(239, 239, 239, 0.2);
+  background: rgba(10, 10, 10, 0.45);
+  color: #efefef;
+  backdrop-filter: blur(8px);
+  transform: translateY(-50%) scale(0.85);
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s;
+}
+.project-card:hover .slider-arrow,
+.slider.is-dragging .slider-arrow {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+.slider-arrow:hover {
+  background: #b0704f;
+  border-color: #b0704f;
+  color: #0a0a0a;
+}
+@media (pointer: coarse) {
+  .slider-arrow {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+    height: 38px;
+    width: 38px;
+  }
+}
+
+/* ---------- Preloader ---------- */
+.preloader {
+  transition: transform 0.85s cubic-bezier(0.83, 0, 0.17, 1);
+}
+.preloader.is-done {
+  transform: translateY(-100%);
+}
+
+/* ---------- Logo ---------- */
+.logo-mark {
+  color: #efefef;
+  transition: transform 0.6s cubic-bezier(0.83, 0, 0.17, 1);
+  overflow: visible;
+}
+.logo-ring {
+  transition: stroke 0.6s ease, stroke-dasharray 0.8s cubic-bezier(0.83, 0, 0.17, 1), transform 0.8s cubic-bezier(0.83, 0, 0.17, 1);
+  transform-origin: 24px 24px;
+}
+.logo-ring-dash {
+  stroke-dasharray: 2 6;
+  opacity: 0.45;
+}
+.logo:hover .logo-ring {
+  stroke: #b0704f;
+  stroke-dasharray: 4 5;
+  transform: rotate(45deg);
+}
+.logo:hover .logo-ring-dash {
+  opacity: 0.9;
+  transform: rotate(-60deg);
+}
+.logo:hover .logo-dot {
+  animation: dot-orbit 1.6s cubic-bezier(0.83, 0, 0.17, 1);
+}
+@keyframes dot-orbit {
+  to { transform-origin: 24px 24px; transform: rotate(360deg); }
+}
+
+/* ---------- Utility ---------- */
+.text-outline {
+  -webkit-text-stroke: 1px rgba(239, 239, 239, 0.35);
+  color: transparent;
+}
+.text-outline-dark {
+  -webkit-text-stroke: 1px rgba(20, 20, 20, 0.4);
+  color: transparent;
+}
+
+/* ---------- Hero ambience ---------- */
+.hero-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  will-change: transform;
+}
+.hero-orb-a {
+  width: 46vw;
+  height: 46vw;
+  right: -12vw;
+  top: -14vw;
+  background: radial-gradient(circle at 40% 40%, rgba(176, 112, 79, 0.32), transparent 62%);
+  animation: orb-drift 16s ease-in-out infinite alternate;
+}
+.hero-orb-b {
+  width: 34vw;
+  height: 34vw;
+  left: -10vw;
+  bottom: -12vw;
+  background: radial-gradient(circle at 60% 55%, rgba(120, 140, 140, 0.2), transparent 60%);
+  animation: orb-drift 20s ease-in-out infinite alternate-reverse;
+}
+@keyframes orb-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(4vw, 3vw) scale(1.12); }
+}
+
+.hero-rings {
+  position: absolute;
+  right: 6vw;
+  bottom: 16vh;
+  width: min(42vw, 560px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  animation: rings-spin 70s linear infinite;
+}
+@keyframes rings-spin {
+  to { transform: rotate(360deg); }
+}
+
+.beam {
+  position: absolute;
+  top: -20%;
+  height: 140%;
+  width: 22vw;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(239, 239, 239, 0.045) 30%,
+    rgba(239, 239, 239, 0.045) 70%,
+    transparent
+  );
+  transform: rotate(18deg) translateX(0);
+  will-change: transform;
+}
+
+.bg-marquee {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 42%;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.05;
+}
+@keyframes marquee-x-rev {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.bg-marquee-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: marquee-x-rev 60s linear infinite;
+  will-change: transform;
+}
+
+/* ---------- Rotating role word ---------- */
+.rotator {
+  display: inline-block;
+  overflow: hidden;
+  height: 1.25em;
+  vertical-align: bottom;
+}
+.rotator-track {
+  display: block;
+  transition: transform 0.8s cubic-bezier(0.83, 0, 0.17, 1);
+  will-change: transform;
+}
+.rotator-track > span {
+  display: block;
+  height: 1.25em;
+  line-height: 1.25em;
+}
+
+/* ---------- Portrait frames ---------- */
+.portrait-clip {
+  clip-path: inset(0 0 0 0);
+}
+.portrait-img {
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), filter 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.portrait-frame:hover .portrait-img {
+  transform: scale(1.05);
+  filter: grayscale(0) !important;
+}
+.frame-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: rgba(176, 112, 79, 0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb-a, .hero-orb-b, .hero-rings, .bg-marquee-track {
+    animation: none;
+  }
+}
+
+/* ---------- Case study overlay ---------- */
+.case-study {
+  visibility: hidden;
+  transition: visibility 0s 0.55s;
+}
+.case-study.is-open {
+  visibility: visible;
+  transition-delay: 0s;
+}
+.case-backdrop {
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.case-panel {
+  transform: translateY(6vh);
+  opacity: 0;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.case-study.is-open .case-backdrop {
+  opacity: 1;
+}
+.case-study.is-open .case-panel {
+  transform: translateY(0);
+  opacity: 1;
+}
+.case-scroll {
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.case-scroll::-webkit-scrollbar {
+  display: none;
+}
+.case-shot {
+  overflow: hidden;
+}
+.case-shot img {
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.case-shot:hover img {
+  transform: scale(1.012);
+}
+/* lock the page behind the overlay */
+html.case-open,
+html.case-open body {
+  overflow: hidden;
+}
+
+/* ---------- Cursor context labels ---------- */
+.cursor-ring .cursor-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.cursor-ring.is-label {
+  width: 76px;
+  height: 76px;
+  border-color: #b0704f;
+  background: #b0704f;
+  mix-blend-mode: normal;
+}
+.cursor-ring.is-label .cursor-label {
+  opacity: 1;
+}
+@media (pointer: coarse) {
+  .cursor-ring.is-label {
+    width: 38px;
+    height: 38px;
+    background: transparent;
+  }
+}
