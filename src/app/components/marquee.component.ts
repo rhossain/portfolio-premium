@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MARQUEE_ITEMS } from '../content';
 
 @Component({
   selector: 'app-marquee',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="marquee overflow-hidden border-y border-paper/10 py-5" aria-hidden="true">
       <div class="marquee-track flex w-max items-center gap-10 pr-10">

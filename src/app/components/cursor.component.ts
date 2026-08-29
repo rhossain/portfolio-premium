@@ -8,12 +8,14 @@ import {
   PLATFORM_ID,
   ViewChild,
   inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { gsap } from 'gsap';
 
 @Component({
   selector: 'app-cursor',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div #ring class="cursor-ring">
       <span #label class="cursor-label"></span>
@@ -23,7 +25,7 @@ import { gsap } from 'gsap';
 })
 export class CursorComponent implements AfterViewInit, OnDestroy {
   @ViewChild('dot', { static: true }) dot!: ElementRef<HTMLElement>;
-  @ViewChild('ring', { static: true }) ring!: ElementRef<HTMLElement>;
+  @ViewChild('ring-3', { static: true }) ring!: ElementRef<HTMLElement>;
   @ViewChild('label', { static: true }) label!: ElementRef<HTMLElement>;
 
   private readonly zone = inject(NgZone);

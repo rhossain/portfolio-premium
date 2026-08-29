@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { PROFILE, SOCIALS } from '../content';
 import { RevealDirective } from '../directives/reveal.directive';
 import { MagneticDirective } from '../directives/magnetic.directive';
@@ -8,6 +8,7 @@ import { ScrollService } from '../services/scroll.service';
   selector: 'app-contact',
   standalone: true,
   imports: [RevealDirective, MagneticDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <footer id="contact" class="bg-cream text-creamtext">
       <div class="mx-auto max-w-[1400px] px-6 pb-10 pt-28 md:px-10 md:pt-40">

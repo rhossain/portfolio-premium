@@ -1,13 +1,14 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NAV_LINKS, PROFILE } from '../content';
 import { ScrollService } from '../services/scroll.service';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <!-- Scroll progress line -->
-    <div class="fixed top-0 left-0 z-[80] h-px w-full bg-paper/10">
+    <div class="fixed top-0 left-0 z-80 h-px w-full bg-paper/10">
       <div
         class="h-full bg-paper origin-left"
         [style.transform]="'scaleX(' + scroll.progress() + ')'"
@@ -15,7 +16,7 @@ import { ScrollService } from '../services/scroll.service';
     </div>
 
     <header
-      class="fixed top-0 left-0 right-0 z-[70] transition-transform duration-700 ease-expo"
+      class="fixed top-0 left-0 right-0 z-70 transition-transform duration-700 ease-expo"
       [class.-translate-y-full]="hidden()"
     >
       <nav

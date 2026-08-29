@@ -9,6 +9,7 @@ import {
   PLATFORM_ID,
   inject,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ABOUT, PROFILE } from '../content';
 import { RevealDirective } from '../directives/reveal.directive';
@@ -17,11 +18,12 @@ import { RevealDirective } from '../directives/reveal.directive';
   selector: 'app-about',
   standalone: true,
   imports: [RevealDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <section id="about" class="relative overflow-hidden py-28 md:py-40">
       <!-- faint section glow -->
       <div
-        class="pointer-events-none absolute -left-[15vw] top-[10%] h-[40vw] w-[40vw] rounded-full opacity-60 blur-[110px]"
+        class="pointer-events-none absolute left-[-15vw] top-[10%] h-[40vw] w-[40vw] rounded-full opacity-60 blur-[110px]"
         style="background: radial-gradient(circle, rgba(176,112,79,0.12), transparent 60%);"
       ></div>
 
@@ -93,7 +95,7 @@ import { RevealDirective } from '../directives/reveal.directive';
                   style="filter: saturate(1.0) contrast(1.03);"
                   loading="lazy"
                 />
-                <div class="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-ink/50 via-transparent to-transparent"></div>
                 <span class="frame-corner left-3 top-3 border-l border-t"></span>
                 <span class="frame-corner bottom-3 right-3 border-b border-r"></span>
               </div>

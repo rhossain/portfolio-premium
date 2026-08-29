@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SKILL_GROUPS } from '../content';
 import { RevealDirective } from '../directives/reveal.directive';
 
@@ -6,6 +6,7 @@ import { RevealDirective } from '../directives/reveal.directive';
   selector: 'app-skills',
   standalone: true,
   imports: [RevealDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <section id="skills" class="mx-auto max-w-[1400px] px-6 py-28 md:px-10 md:py-40">
       <div class="grid gap-12 md:grid-cols-12">

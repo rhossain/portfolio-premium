@@ -10,6 +10,7 @@ import {
   ViewChild,
   inject,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { gsap } from 'gsap';
 import Matter from 'matter-js';
@@ -72,7 +73,7 @@ interface MeasuredLetter {
       @if (!physicsOn()) {
         <div
           #cardEl
-          class="portrait-frame absolute right-[7vw] top-[16vh] z-[5] hidden w-[21vw] max-w-[330px] lg:block"
+          class="portrait-frame absolute right-[7vw] top-[16vh] z-5 hidden w-[21vw] max-w-[330px] lg:block"
           [class.opacity-0]="!active"
           style="transition: opacity 1s ease 0.9s;"
         >
@@ -84,7 +85,7 @@ interface MeasuredLetter {
               style="filter: saturate(1.02) contrast(1.03);"
               loading="eager"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-linear-to-t from-ink/60 via-transparent to-transparent"></div>
             <span class="frame-corner left-3 top-3 border-l border-t"></span>
             <span class="frame-corner right-3 top-3 border-r border-t"></span>
             <span class="frame-corner bottom-3 left-3 border-b border-l"></span>
@@ -185,6 +186,7 @@ interface MeasuredLetter {
       </div>
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       @keyframes scrolldrip {

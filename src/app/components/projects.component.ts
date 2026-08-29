@@ -20,6 +20,7 @@ import { RevealDirective } from '../directives/reveal.directive';
   selector: 'app-projects',
   standalone: true,
   imports: [RevealDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <section id="work" class="mx-auto max-w-[1400px] px-6 py-28 md:px-10 md:py-40">
       <div class="mb-16 flex items-end justify-between md:mb-24">
@@ -44,7 +45,7 @@ import { RevealDirective } from '../directives/reveal.directive';
           >
             <!-- slider -->
             <div
-              class="slider relative aspect-[3/2] touch-pan-y overflow-hidden"
+              class="slider relative aspect-3/2 touch-pan-y overflow-hidden"
               [style.background]="p.palette.base"
               data-cursor="Drag"
               [class.is-dragging]="dragging() === pi"
@@ -59,7 +60,7 @@ import { RevealDirective } from '../directives/reveal.directive';
             >
               <!-- palette glow behind images while loading -->
               <div
-                class="project-orb absolute -right-[15%] -top-[25%] h-[75%] w-[60%] rounded-full blur-2xl"
+                class="project-orb absolute right-[-15%] top-[-25%] h-[75%] w-[60%] rounded-full blur-2xl"
                 [style.background]="'radial-gradient(circle at 35% 35%, ' + p.palette.orb + 'cc, transparent 65%)'"
               ></div>
 
@@ -92,13 +93,13 @@ import { RevealDirective } from '../directives/reveal.directive';
               </div>
 
               <!-- gradient veil + hover tint -->
-              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-ink/10"></div>
+              <div class="pointer-events-none absolute inset-0 bg-linear-to-t from-ink/55 via-transparent to-ink/10"></div>
               <div class="pointer-events-none absolute inset-0 bg-ink/25 transition-colors duration-700 group-hover:bg-ink/0"></div>
 
 
 
               <!-- index counter -->
-              <span class="absolute right-5 top-5 flex items-center gap-2 rounded-full border border-paper/15 bg-ink/50 px-3 py-1 font-mono text-[10px] tabular-nums tracking-[0.2em] text-paper/80 backdrop-blur-sm">
+              <span class="absolute right-5 top-5 flex items-center gap-2 rounded-full border border-paper/15 bg-ink/50 px-3 py-1 font-mono text-[10px] tabular-nums tracking-[0.2em] text-paper/80 backdrop-blur-xs">
                 {{ slide(pi) + 1 }} / {{ p.images.length }}
                 <span class="text-accent" aria-hidden="true">↕</span>
               </span>

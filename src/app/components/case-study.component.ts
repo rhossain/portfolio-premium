@@ -10,6 +10,7 @@ import {
   PLATFORM_ID,
   ViewChild,
   inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Project } from '../content';
 import { ScrollService } from '../services/scroll.service';
@@ -17,10 +18,11 @@ import { ScrollService } from '../services/scroll.service';
 @Component({
   selector: 'app-case-study',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (project) {
       <div
-        class="case-study fixed inset-0 z-[90]"
+        class="case-study fixed inset-0 z-90"
         [class.is-open]="open"
         role="dialog"
         aria-modal="true"

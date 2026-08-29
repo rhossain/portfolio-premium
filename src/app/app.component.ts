@@ -6,6 +6,7 @@ import {
   PLATFORM_ID,
   inject,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { AboutComponent } from './components/about.component';
 import { CaseStudyComponent } from './components/case-study.component';
@@ -35,10 +36,11 @@ import { ScrollService } from './services/scroll.service';
     ContactComponent,
     CaseStudyComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <!-- Preloader -->
     <div
-      class="preloader fixed inset-0 z-[95] flex flex-col items-center justify-center bg-ink"
+      class="preloader fixed inset-0 z-95 flex flex-col items-center justify-center bg-ink"
       [class.is-done]="loaded()"
       aria-hidden="true"
     >
