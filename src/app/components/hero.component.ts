@@ -153,7 +153,7 @@ interface MeasuredLetter {
 
         <div class="flex flex-col items-center gap-3">
           @if (!physicsOn()) {
-            @if (physicsAvailable) {
+            @if (physicsAvailable()) {
               <button
                 (click)="startPhysics()"
                 class="u-sweep font-mono text-[11px] uppercase tracking-[0.25em] text-paper/50 transition-colors hover:text-paper"
@@ -217,7 +217,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
 
   /** physics hero is disabled on touch / small screens */
-  physicsAvailable = false;
+  readonly physicsAvailable = signal(false);
 
   private engine?: Matter.Engine;
   private rafId = 0;
@@ -232,7 +232,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     const finePointer = window.matchMedia('(pointer: fine)').matches;
-    this.physicsAvailable = finePointer && window.innerWidth >= 768;
+    this.physicsAvailable.set(finePointer && window.innerWidth >= 768);
 
     this.zone.runOutsideAngular(() => {
       this.viewObserver = new IntersectionObserver(
@@ -281,7 +281,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   }
 
   startPhysics(): void {
-    if (!this.physicsAvailable || this.physicsOn()) return;
+    if (!this.physicsAvailable() || this.physicsOn()) return;
 
     const container = this.heroEl.nativeElement;
     const containerRect = container.getBoundingClientRect();
