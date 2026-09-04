@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MARQUEE_ITEMS } from '../content';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { PortfolioContentService } from '../services/portfolio-content.service';
 
 @Component({
   selector: 'app-marquee',
@@ -23,5 +23,9 @@ import { MARQUEE_ITEMS } from '../content';
   `,
 })
 export class MarqueeComponent {
-  readonly doubled = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+  private readonly content = inject(PortfolioContentService);
+  get doubled() {
+    const items = this.content.content().marqueeItems;
+    return [...items, ...items];
+  }
 }

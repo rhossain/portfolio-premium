@@ -1,8 +1,75 @@
 /**
- * Central content file — edit everything about the portfolio here.
+ * Fallback and seed content. Supabase is the production source of truth.
  */
 
-export const PROFILE = {
+const STORAGE_BASE =
+  'https://czmpwatylyfhsjggdsiu.supabase.co/storage/v1/object/public/portfolio-media';
+
+export interface MediaAsset {
+  src: string;
+  alt: string;
+  storagePath?: string;
+}
+
+export interface Profile {
+  name: string;
+  firstName: string;
+  lastName: string;
+  initials: string;
+  role: string;
+  years: string;
+  location: string;
+  email: string;
+  phone: string;
+  availability: string;
+  tagline: string;
+  heroImage: MediaAsset;
+  aboutImage: MediaAsset;
+}
+
+export interface NavLink {
+  label: string;
+  target: string;
+}
+
+export interface AboutContent {
+  statement: string;
+  paragraphs: string[];
+  stats: { value: string; label: string }[];
+  descriptors: string[];
+  languages: string[];
+}
+
+export interface SkillGroup {
+  title: string;
+  items: string[];
+}
+
+export interface SocialLink {
+  label: string;
+  url: string;
+}
+
+export interface PortfolioContent {
+  profile: Profile;
+  navLinks: NavLink[];
+  marqueeItems: string[];
+  about: AboutContent;
+  experience: ExperienceItem[];
+  projects: Project[];
+  skillGroups: SkillGroup[];
+  socials: SocialLink[];
+}
+
+function storageAsset(path: string, alt: string): MediaAsset {
+  return {
+    src: `${STORAGE_BASE}/${path}`,
+    alt,
+    storagePath: path,
+  };
+}
+
+export const PROFILE: Profile = {
   name: 'Sazzad Hossain',
   firstName: 'Sazzad',
   lastName: 'Hossain',
@@ -15,9 +82,11 @@ export const PROFILE = {
   availability: 'Open to new opportunities',
   tagline:
     'UI developer from Bangladesh, crafting clean & user-friendly experiences with quality and best practices.',
+  heroImage: storageAsset('profile/portrait-hero.jpg', 'Sazzad Hossain'),
+  aboutImage: storageAsset('profile/portrait-about.jpg', 'Sazzad Hossain at work'),
 };
 
-export const NAV_LINKS = [
+export const NAV_LINKS: NavLink[] = [
   { label: 'About', target: '#about' },
   { label: 'Experience', target: '#experience' },
   { label: 'Work', target: '#work' },
@@ -37,7 +106,7 @@ export const MARQUEE_ITEMS = [
   'Responsive Design',
 ];
 
-export const ABOUT = {
+export const ABOUT: AboutContent = {
   statement:
     'For over sixteen years I have been turning designs into interfaces people enjoy using — pixel-perfect, responsive, and quietly refined.',
   paragraphs: [
@@ -50,6 +119,8 @@ export const ABOUT = {
     { value: '4', label: 'Companies, two continents of clients' },
     { value: '100%', label: 'Responsive, always' },
   ],
+  descriptors: ['UI Engineer', 'Design Translator', 'Problem Solver', 'Pixel Perfectionist', 'Scrum Regular'],
+  languages: ['Bangla — native', 'English — fluent'],
 };
 
 export interface ExperienceItem {
@@ -110,7 +181,7 @@ export interface Project {
   description: string;
   stack: string[];
   url?: string;
-  images: string[];
+  images: MediaAsset[];
   palette: { base: string; orb: string; orb2: string };
   wide: boolean;
   caseStudy: CaseStudy;
@@ -126,7 +197,11 @@ export const PROJECTS: Project[] = [
       'A modular Angular storefront: RxJS and BehaviorSubject state management, JWT session handling, TTL-based caching to kill redundant requests, and intersection-observer lazy loading for large catalogues.',
     stack: ['Angular', 'RxJS', 'Bootstrap', 'CSS3'],
     url: 'https://ngcommerce.rshossain.me',
-    images: ['work/ngc-1.jpg', 'work/ngc-2.jpg', 'work/ngc-3.jpg'],
+    images: [
+      storageAsset('work/ngc-1.jpg', 'ngCommerce — screen 1'),
+      storageAsset('work/ngc-2.jpg', 'ngCommerce — screen 2'),
+      storageAsset('work/ngc-3.jpg', 'ngCommerce — screen 3'),
+    ],
     palette: { base: '#141210', orb: '#b0704f', orb2: '#9f4920' },
     wide: true,
     caseStudy: {
@@ -149,7 +224,11 @@ export const PROJECTS: Project[] = [
     description:
       'A fully responsive nopCommerce theme — custom templates, product galleries and checkout flows tuned for conversion across devices.',
     stack: ['nopCommerce', 'Razor', 'SCSS', 'JavaScript'],
-    images: ['work/kalles-1.jpg', 'work/kalles-2.jpg', 'work/kalles-3.jpg'],
+    images: [
+      storageAsset('work/kalles-1.jpg', 'Nop Kalles — screen 1'),
+      storageAsset('work/kalles-2.jpg', 'Nop Kalles — screen 2'),
+      storageAsset('work/kalles-3.jpg', 'Nop Kalles — screen 3'),
+    ],
     palette: { base: '#121412', orb: '#788c8c', orb2: '#b0704f' },
     wide: false,
     caseStudy: {
@@ -172,7 +251,11 @@ export const PROJECTS: Project[] = [
     description:
       'Elegant ecommerce UI with carefully crafted product detail pages, category filtering and a mobile-first responsive grid.',
     stack: ['HTML5', 'Tailwind CSS', 'JavaScript'],
-    images: ['work/fortune-1.jpg', 'work/fortune-2.jpg', 'work/fortune-3.jpg'],
+    images: [
+      storageAsset('work/fortune-1.jpg', 'Fortune — screen 1'),
+      storageAsset('work/fortune-2.jpg', 'Fortune — screen 2'),
+      storageAsset('work/fortune-3.jpg', 'Fortune — screen 3'),
+    ],
     palette: { base: '#131118', orb: '#a697c6', orb2: '#788c8c' },
     wide: false,
     caseStudy: {
@@ -195,7 +278,11 @@ export const PROJECTS: Project[] = [
     description:
       'Property listing platform UI: search and filtering for large datasets, map-ready listing cards and agent detail pages.',
     stack: ['Angular', 'SCSS', 'REST API'],
-    images: ['work/realty-1.jpg', 'work/realty-2.jpg', 'work/realty-3.jpg'],
+    images: [
+      storageAsset('work/realty-1.jpg', 'My Realty — screen 1'),
+      storageAsset('work/realty-2.jpg', 'My Realty — screen 2'),
+      storageAsset('work/realty-3.jpg', 'My Realty — screen 3'),
+    ],
     palette: { base: '#101312', orb: '#788c8c', orb2: '#9f4920' },
     wide: true,
     caseStudy: {
@@ -218,7 +305,11 @@ export const PROJECTS: Project[] = [
     description:
       'Corporate site for a digital agency — pixel-perfect PSD implementation with smooth scroll interactions and cross-browser polish.',
     stack: ['HTML5', 'CSS3', 'jQuery'],
-    images: ['work/blueliner-1.jpg', 'work/blueliner-2.jpg', 'work/blueliner-3.jpg'],
+    images: [
+      storageAsset('work/blueliner-1.jpg', 'Blueliner — screen 1'),
+      storageAsset('work/blueliner-2.jpg', 'Blueliner — screen 2'),
+      storageAsset('work/blueliner-3.jpg', 'Blueliner — screen 3'),
+    ],
     palette: { base: '#121214', orb: '#4d65ff', orb2: '#788c8c' },
     wide: false,
     caseStudy: {
@@ -241,7 +332,11 @@ export const PROJECTS: Project[] = [
     description:
       'A playful storefront theme with bright, accessible components and a checkout flow simple enough for busy parents.',
     stack: ['WordPress', 'PHP', 'CSS3'],
-    images: ['work/kids-1.jpg', 'work/kids-2.jpg', 'work/kids-3.jpg'],
+    images: [
+      storageAsset('work/kids-1.jpg', 'Kids Toys — screen 1'),
+      storageAsset('work/kids-2.jpg', 'Kids Toys — screen 2'),
+      storageAsset('work/kids-3.jpg', 'Kids Toys — screen 3'),
+    ],
     palette: { base: '#141110', orb: '#9f4920', orb2: '#a697c6' },
     wide: false,
     caseStudy: {
@@ -258,7 +353,7 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-export const SKILL_GROUPS = [
+export const SKILL_GROUPS: SkillGroup[] = [
   {
     title: 'Core',
     items: ['HTML5', 'CSS3', 'SCSS', 'JavaScript', 'TypeScript', 'Angular', 'RxJS', 'jQuery'],
@@ -273,9 +368,20 @@ export const SKILL_GROUPS = [
   },
 ];
 
-export const SOCIALS = [
+export const SOCIALS: SocialLink[] = [
   { label: 'LinkedIn', url: 'https://www.linkedin.com/in/rhossain' },
   { label: 'Facebook', url: 'https://www.facebook.com/rhossainbd' },
   { label: 'Instagram', url: 'https://www.instagram.com/rshossain.bd' },
   { label: 'Skype', url: 'https://join.skype.com/invite/vwNHYMYW5jvJ' },
 ];
+
+export const DEFAULT_PORTFOLIO: PortfolioContent = {
+  profile: PROFILE,
+  navLinks: NAV_LINKS,
+  marqueeItems: MARQUEE_ITEMS,
+  about: ABOUT,
+  experience: EXPERIENCE,
+  projects: PROJECTS,
+  skillGroups: SKILL_GROUPS,
+  socials: SOCIALS,
+};

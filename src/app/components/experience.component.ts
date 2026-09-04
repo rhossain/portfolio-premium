@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { EXPERIENCE } from '../content';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RevealDirective } from '../directives/reveal.directive';
+import { PortfolioContentService } from '../services/portfolio-content.service';
 
 @Component({
   selector: 'app-experience',
@@ -67,7 +67,8 @@ import { RevealDirective } from '../directives/reveal.directive';
   `,
 })
 export class ExperienceComponent {
-  readonly items = EXPERIENCE;
+  private readonly content = inject(PortfolioContentService);
+  get items() { return this.content.content().experience; }
   readonly eras = ['Now', 'Then'] as const;
 
   byEra(era: string) {

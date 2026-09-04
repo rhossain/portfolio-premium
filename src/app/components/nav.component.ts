@@ -1,6 +1,6 @@
 import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
-import { NAV_LINKS, PROFILE } from '../content';
 import { ScrollService } from '../services/scroll.service';
+import { PortfolioContentService } from '../services/portfolio-content.service';
 
 @Component({
   selector: 'app-nav',
@@ -76,8 +76,9 @@ import { ScrollService } from '../services/scroll.service';
 })
 export class NavComponent {
   readonly scroll = inject(ScrollService);
-  readonly profile = PROFILE;
-  readonly links = NAV_LINKS;
+  private readonly content = inject(PortfolioContentService);
+  get profile() { return this.content.content().profile; }
+  get links() { return this.content.content().navLinks; }
 
   /** hide nav when scrolling down past the hero, show when scrolling up */
   readonly hidden = computed(

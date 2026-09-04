@@ -13,8 +13,9 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { PROJECTS, Project } from '../content';
+import { Project } from '../content';
 import { RevealDirective } from '../directives/reveal.directive';
+import { PortfolioContentService } from '../services/portfolio-content.service';
 
 @Component({
   selector: 'app-projects',
@@ -69,7 +70,7 @@ import { RevealDirective } from '../directives/reveal.directive';
                 [style.transform]="trackTransform(pi)"
                 [class.no-anim]="dragging() === pi"
               >
-                @for (img of p.images; track img; let ii = $index) {
+                @for (img of p.images; track img.src; let ii = $index) {
                   <div class="relative h-full w-full shrink-0 select-none overflow-hidden">
                     <div
                       class="slider-pan absolute left-0 top-0 w-full"
@@ -81,11 +82,11 @@ import { RevealDirective } from '../directives/reveal.directive';
                       <div
                         class="slider-img absolute inset-0"
                         role="img"
-                        [attr.aria-label]="p.title + ' — screen ' + (ii + 1)"
+                        [attr.aria-label]="img.alt || p.title + ' — screen ' + (ii + 1)"
                         [attr.data-pi]="pi"
                         [attr.data-ii]="ii"
-                        [attr.data-src]="img"
-                        [style.background-image]="'url(' + img + ')'"
+                        [attr.data-src]="img.src"
+                        [style.background-image]="'url(' + img.src + ')'"
                       ></div>
                     </div>
                   </div>
@@ -129,7 +130,7 @@ import { RevealDirective } from '../directives/reveal.directive';
 
               <!-- progress segments -->
               <div class="absolute bottom-5 right-5 flex gap-1.5">
-                @for (img of p.images; track img; let ii = $index) {
+                @for (img of p.images; track img.src; let ii = $index) {
                   <button
                     type="button"
                     (click)="goTo(pi, ii); $event.stopPropagation()"
@@ -197,7 +198,8 @@ import { RevealDirective } from '../directives/reveal.directive';
   `,
 })
 export class ProjectsComponent implements AfterViewInit, OnDestroy {
-  readonly projects = PROJECTS;
+  private readonly content = inject(PortfolioContentService);
+  get projects() { return this.content.content().projects; }
   @Output() readonly openCase = new EventEmitter<Project>();
 
   private readonly host = inject(ElementRef<HTMLElement>);

@@ -1,7 +1,7 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { PROFILE, SOCIALS } from '../content';
 import { RevealDirective } from '../directives/reveal.directive';
 import { MagneticDirective } from '../directives/magnetic.directive';
+import { PortfolioContentService } from '../services/portfolio-content.service';
 import { ScrollService } from '../services/scroll.service';
 
 @Component({
@@ -76,9 +76,10 @@ import { ScrollService } from '../services/scroll.service';
   `,
 })
 export class ContactComponent {
-  readonly profile = PROFILE;
-  readonly socials = SOCIALS;
-  readonly telHref = 'tel:' + PROFILE.phone.replace(/\s/g, '');
+  private readonly content = inject(PortfolioContentService);
+  get profile() { return this.content.content().profile; }
+  get socials() { return this.content.content().socials; }
+  get telHref() { return 'tel:' + this.profile.phone.replace(/\s/g, ''); }
   private readonly scroll = inject(ScrollService);
 
   toTop(): void {

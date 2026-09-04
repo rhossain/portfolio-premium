@@ -118,11 +118,11 @@ import { ScrollService } from '../services/scroll.service';
               <div class="mt-16">
                 <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-paper/40">Screens</p>
                 <div class="mt-8 space-y-8">
-                  @for (img of project.images; track img; let i = $index) {
+                  @for (img of project.images; track img.src; let i = $index) {
                     <figure class="case-shot border border-paper/10" [style.background]="project.palette.base">
                       <img
-                        [src]="img"
-                        [alt]="project.title + ' — screen ' + (i + 1)"
+                        [src]="img.src"
+                        [alt]="img.alt || project.title + ' — screen ' + (i + 1)"
                         class="block w-full"
                         loading="lazy"
                       />

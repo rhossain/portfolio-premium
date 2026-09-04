@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { gsap } from 'gsap';
 import Matter from 'matter-js';
-import { PROFILE } from '../content';
+import { PortfolioContentService } from '../services/portfolio-content.service';
 
 interface MeasuredLetter {
   char: string;
@@ -79,8 +79,8 @@ interface MeasuredLetter {
         >
           <div class="portrait-clip relative overflow-hidden bg-ink2">
             <img
-              src="portrait-hero.jpg"
-              [alt]="profile.name"
+              [src]="profile.heroImage.src"
+              [alt]="profile.heroImage.alt"
               class="portrait-img aspect-[2/2.6] w-full object-cover"
               style="filter: saturate(1.02) contrast(1.03);"
               loading="eager"
@@ -207,9 +207,10 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   @ViewChild('beamB') beamB?: ElementRef<HTMLElement>;
   @ViewChild('cardEl') cardEl?: ElementRef<HTMLElement>;
 
-  readonly profile = PROFILE;
-  readonly firstNameChars = PROFILE.firstName.split('');
-  readonly lastNameChars = PROFILE.lastName.split('');
+  private readonly content = inject(PortfolioContentService);
+  get profile() { return this.content.content().profile; }
+  get firstNameChars() { return this.profile.firstName.split(''); }
+  get lastNameChars() { return this.profile.lastName.split(''); }
   readonly physicsOn = signal(false);
   readonly measured: MeasuredLetter[] = [];
 

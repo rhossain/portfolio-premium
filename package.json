@@ -1,10 +1,17 @@
 {
   "name": "portfolio",
   "version": "0.0.0",
+  "engines": {
+    "node": ">=22.22.3"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4700",
     "build": "ng build",
+    "deploy": "bash scripts/deploy-hostinger.sh",
+    "deploy:dry-run": "bash scripts/deploy-hostinger.sh --dry-run",
+    "deploy:frontend": "bash scripts/deploy-hostinger.sh --skip-supabase",
+    "rollback": "bash scripts/rollback-hostinger.sh",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -17,6 +24,7 @@
     "@angular/platform-browser": "^22.1.4",
     "@angular/platform-browser-dynamic": "^22.1.4",
     "@angular/router": "^22.1.4",
+    "@supabase/supabase-js": "^2.109.0",
     "gsap": "^3.15.0",
     "lenis": "^1.3.26",
     "matter-js": "^0.20.0",
@@ -25,8 +33,8 @@
     "zone.js": "^0.16.2"
   },
   "devDependencies": {
-    "@angular/build": "^22.1.6",
     "@angular-devkit/build-angular": "^22.1.6",
+    "@angular/build": "^22.1.6",
     "@angular/cli": "^22.1.6",
     "@angular/compiler-cli": "^22.1.4",
     "@tailwindcss/postcss": "^4.3.3",
@@ -40,6 +48,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.3.0",
     "postcss": "^8.5.26",
+    "supabase": "^2.116.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.3"
   }

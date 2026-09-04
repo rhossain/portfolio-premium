@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { SKILL_GROUPS } from '../content';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RevealDirective } from '../directives/reveal.directive';
+import { PortfolioContentService } from '../services/portfolio-content.service';
 
 @Component({
   selector: 'app-skills',
@@ -40,5 +40,6 @@ import { RevealDirective } from '../directives/reveal.directive';
   `,
 })
 export class SkillsComponent {
-  readonly groups = SKILL_GROUPS;
+  private readonly content = inject(PortfolioContentService);
+  get groups() { return this.content.content().skillGroups; }
 }

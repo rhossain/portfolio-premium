@@ -11,8 +11,8 @@ import {
   signal,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { ABOUT, PROFILE } from '../content';
 import { RevealDirective } from '../directives/reveal.directive';
+import { PortfolioContentService } from '../services/portfolio-content.service';
 
 @Component({
   selector: 'app-about',
@@ -73,7 +73,7 @@ import { RevealDirective } from '../directives/reveal.directive';
               [revealDelay]="250"
               class="mt-14 flex flex-wrap gap-2 border-t border-paper/10 pt-8"
             >
-              @for (lang of ['Bangla — native', 'English — fluent']; track lang) {
+              @for (lang of about.languages; track lang) {
                 <span class="border border-paper/15 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.15em] text-paper/50">
                   {{ lang }}
                 </span>
@@ -89,8 +89,8 @@ import { RevealDirective } from '../directives/reveal.directive';
             <figure appReveal [revealDelay]="200" class="portrait-frame relative md:mt-16">
               <div class="portrait-clip relative overflow-hidden bg-ink2">
                 <img
-                  src="portrait-about.jpg"
-                  alt="Workspace — late night coding session"
+                  [src]="profile.aboutImage.src"
+                  [alt]="profile.aboutImage.alt"
                   class="portrait-img aspect-[3/2.4] w-full object-cover"
                   style="filter: saturate(1.0) contrast(1.03);"
                   loading="lazy"
@@ -123,11 +123,12 @@ import { RevealDirective } from '../directives/reveal.directive';
   `,
 })
 export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
-  readonly about = ABOUT;
-  readonly profile = PROFILE;
-  readonly words = ['UI Engineer', 'Design Translator', 'Problem Solver', 'Pixel Perfectionist', 'Scrum Regular'];
+  private readonly content = inject(PortfolioContentService);
+  get about() { return this.content.content().about; }
+  get profile() { return this.content.content().profile; }
+  get words() { return this.about.descriptors; }
   readonly wordIndex = signal(0);
-  readonly statementWords = ABOUT.statement.split(' ');
+  get statementWords() { return this.about.statement.split(' '); }
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly zone = inject(NgZone);
