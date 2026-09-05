@@ -6,8 +6,8 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 4700",
-    "build": "ng build",
+    "start": "ng serve --host 127.0.0.1 --port 4700",
+    "build": "ng build --no-progress",
     "deploy": "bash scripts/deploy-hostinger.sh",
     "deploy:dry-run": "bash scripts/deploy-hostinger.sh --dry-run",
     "deploy:frontend": "bash scripts/deploy-hostinger.sh --skip-supabase",

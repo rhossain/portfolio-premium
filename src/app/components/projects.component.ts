@@ -23,359 +23,547 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
   imports: [RevealDirective],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <section id="work" class="mx-auto max-w-[1400px] px-6 py-28 md:px-10 md:py-40">
-      <div class="mb-16 flex items-end justify-between md:mb-24">
-        <div appReveal>
-          <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-paper/40">03 — Selected Work</p>
-          <span class="mt-4 block h-px w-16 bg-paper/25"></span>
-        </div>
-        <p appReveal class="hidden font-mono text-[11px] uppercase tracking-[0.25em] text-paper/40 md:block">
-          {{ projects.length }} projects — hover to tour, drag to browse
-        </p>
-      </div>
+    <section id="work" class="work-section relative overflow-hidden py-28 md:py-40">
+      <div class="work-watermark" aria-hidden="true">Selected work</div>
 
-      <div class="grid gap-y-20 md:grid-cols-12 md:gap-x-10 md:gap-y-36">
-        @for (p of projects; track p.index; let pi = $index) {
-          <article
-            appReveal
-            class="project-card group md:col-span-7"
-            [class.md:col-span-7]="p.wide"
-            [class.md:col-span-5]="!p.wide"
-            [class.md:col-start-8]="!p.wide && pi % 2 === 1"
-            [class.md:mt-24]="!p.wide && pi % 2 === 1"
-          >
-            <!-- slider -->
-            <div
-              class="slider relative aspect-3/2 touch-pan-y overflow-hidden"
-              [style.background]="p.palette.base"
-              data-cursor="Drag"
-              [class.is-dragging]="dragging() === pi"
-              [class.touring]="hovering() === pi"
-              (pointerdown)="onDragStart($event, pi, p)"
-              (pointermove)="onDragMove($event, pi)"
-              (pointerup)="onDragEnd($event, pi, p)"
-              (pointercancel)="onDragEnd($event, pi, p)"
-              (pointerleave)="onDragLeave($event, pi, p)"
-              (mouseenter)="onHoverStart(pi)"
-              (mouseleave)="onHoverEnd(pi)"
-            >
-              <!-- palette glow behind images while loading -->
-              <div
-                class="project-orb absolute right-[-15%] top-[-25%] h-[75%] w-[60%] rounded-full blur-2xl"
-                [style.background]="'radial-gradient(circle at 35% 35%, ' + p.palette.orb + 'cc, transparent 65%)'"
-              ></div>
+      <div class="relative mx-auto max-w-[1400px] px-6 md:px-10">
+        <header class="grid gap-10 md:grid-cols-12 md:items-end" appReveal>
+          <div class="md:col-span-3">
+            <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-paper/40">03 — Selected Work</p>
+            <span class="mt-4 block h-px w-16 bg-paper/25"></span>
+          </div>
 
-              <div
-                class="slider-track flex h-full will-change-transform"
-                [style.transform]="trackTransform(pi)"
-                [class.no-anim]="dragging() === pi"
-              >
-                @for (img of p.images; track img.src; let ii = $index) {
-                  <div class="relative h-full w-full shrink-0 select-none overflow-hidden">
+          <div class="md:col-span-6">
+            <h2 class="font-display text-[2.8rem] font-light leading-[0.98] text-paper md:text-[4.25rem]">
+              Interfaces built<br />
+              <em class="font-light text-accent">to perform.</em>
+            </h2>
+          </div>
+
+          <p class="max-w-xs text-sm leading-relaxed text-paper/42 md:col-span-3 md:justify-self-end">
+            A curated view of commerce, property and brand platforms — engineered across screens and stacks.
+          </p>
+        </header>
+
+        @if (projects.length) {
+          <div class="work-viewer mt-16 border-y border-paper/10 md:mt-24 md:grid md:grid-cols-12" appReveal>
+            <nav class="project-index md:col-span-4 lg:col-span-3" aria-label="Select a project">
+              <div class="hidden min-h-20 items-center justify-between border-b border-paper/10 pr-7 md:flex">
+                <span class="font-mono text-[9px] uppercase tracking-[0.22em] text-paper/32">Project index</span>
+                <span class="font-mono text-[9px] tabular-nums tracking-[0.18em] text-paper/30">
+                  {{ paddedProject(activeProjectIndex() + 1) }} / {{ paddedProject(projects.length) }}
+                </span>
+              </div>
+
+              <div class="project-index-list flex overflow-x-auto md:block md:overflow-visible">
+                @for (project of projects; track project.index; let pi = $index) {
+                  <button
+                    type="button"
+                    class="project-picker group relative grid min-w-[14rem] shrink-0 grid-cols-[2rem_1fr] gap-3 border-r border-paper/10 px-4 py-5 text-left md:min-h-[92px] md:w-full md:min-w-0 md:border-b md:border-r-0 md:px-0 md:py-5 md:pr-7"
+                    [class.is-active]="activeProjectIndex() === pi"
+                    [attr.aria-pressed]="activeProjectIndex() === pi"
+                    (click)="selectProject(pi)"
+                    data-cursor="View"
+                  >
+                    <span class="picker-index font-mono text-[9px] tabular-nums tracking-[0.18em] text-paper/28">
+                      {{ project.index }}
+                    </span>
+                    <span>
+                      <span class="picker-title block font-display text-xl font-light leading-none text-paper/55 transition-colors duration-300 group-hover:text-paper md:text-[1.35rem]">
+                        {{ project.title }}
+                      </span>
+                      <span class="mt-2 block font-mono text-[8px] uppercase tracking-[0.17em] text-paper/28">
+                        {{ project.category }} · {{ project.year }}
+                      </span>
+                    </span>
+                    <span class="picker-line absolute inset-y-0 right-0 hidden w-px origin-top scale-y-0 bg-accent transition-transform duration-500 ease-expo md:block"></span>
+                  </button>
+                }
+              </div>
+
+              <div class="hidden items-center gap-3 py-7 pr-7 md:flex">
+                <span class="h-px flex-1 bg-paper/10"></span>
+                <span class="font-mono text-[8px] uppercase tracking-[0.17em] text-paper/25">Choose a project</span>
+              </div>
+            </nav>
+
+            <div class="relative md:col-span-8 md:border-l md:border-paper/10 lg:col-span-9">
+              @for (project of projects; track project.index; let pi = $index) {
+                @if (activeProjectIndex() === pi) {
+                  <article class="active-project project-stage" [style.--project-color]="project.palette.orb">
                     <div
-                      class="slider-pan absolute left-0 top-0 w-full"
-                      [style.height]="panHeight(pi, ii)"
-                      [style.transform]="panTransform(pi, ii)"
-                      [style.--tour-dur]="tourDur(pi, ii)"
-                      [class.panning]="hovering() === pi && slide(pi) === ii"
+                      class="slider relative aspect-[16/10] touch-pan-y overflow-hidden md:aspect-[16/9]"
+                      [style.background]="project.palette.base"
+                      [class.is-dragging]="dragging() === pi"
+                      [class.touring]="hovering() === pi"
+                      (pointerdown)="onDragStart($event, pi)"
+                      (pointermove)="onDragMove($event, pi)"
+                      (pointerup)="onDragEnd($event, pi, project)"
+                      (pointercancel)="onDragEnd($event, pi, project)"
+                      (pointerleave)="onDragLeave($event, pi, project)"
+                      (mouseenter)="onHoverStart(pi)"
+                      (mouseleave)="onHoverEnd(pi)"
+                      data-cursor="Drag"
                     >
                       <div
-                        class="slider-img absolute inset-0"
-                        role="img"
-                        [attr.aria-label]="img.alt || p.title + ' — screen ' + (ii + 1)"
-                        [attr.data-pi]="pi"
-                        [attr.data-ii]="ii"
-                        [attr.data-src]="img.src"
-                        [style.background-image]="'url(' + img.src + ')'"
+                        class="project-orb absolute right-[-10%] top-[-35%] h-[85%] w-[65%] rounded-full blur-3xl"
+                        [style.background]="'radial-gradient(circle at 35% 35%, ' + project.palette.orb + 'bb, transparent 68%)'"
                       ></div>
+                      <div
+                        class="project-orb-secondary absolute bottom-[-45%] left-[-15%] h-[75%] w-[55%] rounded-full blur-3xl"
+                        [style.background]="'radial-gradient(circle, ' + project.palette.orb2 + '70, transparent 70%)'"
+                      ></div>
+
+                      <div
+                        class="slider-track flex h-full will-change-transform"
+                        [style.transform]="trackTransform(pi)"
+                        [class.no-anim]="dragging() === pi"
+                      >
+                        @for (image of project.images; track image.src; let ii = $index) {
+                          <div class="relative h-full w-full shrink-0 select-none overflow-hidden">
+                            <div
+                              class="slider-pan absolute left-0 top-0 w-full"
+                              [style.height]="panHeight(pi, ii)"
+                              [style.transform]="panTransform(pi, ii)"
+                              [style.--tour-dur]="tourDur(pi, ii)"
+                              [class.panning]="hovering() === pi && slide(pi) === ii"
+                            >
+                              <div
+                                class="slider-img absolute inset-0"
+                                role="img"
+                                [attr.aria-label]="image.alt || project.title + ' — screen ' + (ii + 1)"
+                                [style.background-image]="'url(' + image.src + ')'"
+                              ></div>
+                            </div>
+                          </div>
+                        }
+                      </div>
+
+                      <div class="pointer-events-none absolute inset-0 bg-linear-to-t from-ink/75 via-transparent to-ink/20"></div>
+                      <div class="pointer-events-none absolute inset-0 border border-paper/8"></div>
+
+                      <div class="absolute left-5 top-5 flex items-center gap-3 md:left-7 md:top-7">
+                        <span class="rounded-full border border-paper/15 bg-ink/55 px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-paper/60 backdrop-blur-md">
+                          Screen {{ slide(pi) + 1 }} of {{ project.images.length }}
+                        </span>
+                        <span class="tour-label hidden font-mono text-[8px] uppercase tracking-[0.16em] text-paper/38 sm:block">
+                          Hover to tour
+                        </span>
+                      </div>
+
+                      <span class="project-ghost pointer-events-none absolute bottom-[-0.16em] left-5 font-display text-[7rem] font-light leading-none text-paper/[0.07] md:left-7 md:text-[11rem]">
+                        {{ project.index }}
+                      </span>
+
+                      <button
+                        type="button"
+                        (click)="step(pi, -1, project); $event.stopPropagation()"
+                        [attr.aria-label]="'Previous screen — ' + project.title"
+                        class="slider-arrow left-4 md:left-6"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                          <path d="M9 1L3 7l6 6" stroke="currentColor" stroke-width="1.5" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="step(pi, 1, project); $event.stopPropagation()"
+                        [attr.aria-label]="'Next screen — ' + project.title"
+                        class="slider-arrow right-4 md:right-6"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                          <path d="M5 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" />
+                        </svg>
+                      </button>
+
+                      <div class="absolute bottom-5 right-5 flex items-center gap-2 md:bottom-7 md:right-7">
+                        @for (image of project.images; track image.src; let ii = $index) {
+                          <button
+                            type="button"
+                            (click)="goTo(pi, ii); $event.stopPropagation()"
+                            [attr.aria-label]="'Show screen ' + (ii + 1) + ' — ' + project.title"
+                            [attr.aria-pressed]="slide(pi) === ii"
+                            class="screen-dot group/dot grid h-7 w-7 cursor-pointer place-items-center"
+                          >
+                            <span
+                              class="block h-px transition-all duration-500"
+                              [class.w-6]="slide(pi) === ii"
+                              [class.w-3]="slide(pi) !== ii"
+                              [style.background]="slide(pi) === ii ? '#b0704f' : 'rgba(239,239,239,0.35)'"
+                            ></span>
+                          </button>
+                        }
+                      </div>
                     </div>
-                  </div>
+
+                    <div class="project-copy grid gap-8 border-t border-paper/10 px-5 py-8 md:grid-cols-12 md:px-8 md:py-10 lg:px-10">
+                      <div class="md:col-span-7">
+                        <p class="font-mono text-[9px] uppercase tracking-[0.22em] text-accent">
+                          {{ project.category }} — {{ project.year }}
+                        </p>
+                        <h3 class="mt-3 font-display text-4xl font-light leading-none text-paper md:text-5xl">
+                          {{ project.title }}<span class="text-accent">.</span>
+                        </h3>
+                        <p class="mt-5 max-w-xl text-sm leading-[1.8] text-paper/48">{{ project.description }}</p>
+                      </div>
+
+                      <div class="flex flex-col justify-between gap-8 md:col-span-5 md:border-l md:border-paper/10 md:pl-8">
+                        <div class="flex flex-wrap gap-x-5 gap-y-3">
+                          @for (technology of project.stack; track technology) {
+                            <span class="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.15em] text-paper/42">
+                              <span class="text-accent" aria-hidden="true">+</span>{{ technology }}
+                            </span>
+                          }
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-3">
+                          <button
+                            type="button"
+                            class="case-study-link group/case inline-flex min-h-11 cursor-pointer items-center gap-4 border border-accent/60 px-5 font-mono text-[9px] uppercase tracking-[0.2em] text-paper transition-colors duration-300 hover:bg-accent hover:text-ink"
+                            (click)="openCase.emit(project)"
+                            data-cursor="View"
+                          >
+                            View case study
+                            <span class="transition-transform duration-300 group-hover/case:translate-x-1" aria-hidden="true">→</span>
+                          </button>
+                          @if (project.url) {
+                            <a
+                              [href]="project.url"
+                              target="_blank"
+                              rel="noopener"
+                              [attr.aria-label]="'Visit ' + project.title + ' live site'"
+                              class="inline-flex min-h-11 cursor-pointer items-center px-3 font-mono text-[9px] uppercase tracking-[0.18em] text-paper/45 transition-colors duration-300 hover:text-accent"
+                            >
+                              Live site ↗
+                            </a>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </article>
                 }
-              </div>
+              }
 
-              <!-- gradient veil + hover tint -->
-              <div class="pointer-events-none absolute inset-0 bg-linear-to-t from-ink/55 via-transparent to-ink/10"></div>
-              <div class="pointer-events-none absolute inset-0 bg-ink/25 transition-colors duration-700 group-hover:bg-ink/0"></div>
-
-
-
-              <!-- index counter -->
-              <span class="absolute right-5 top-5 flex items-center gap-2 rounded-full border border-paper/15 bg-ink/50 px-3 py-1 font-mono text-[10px] tabular-nums tracking-[0.2em] text-paper/80 backdrop-blur-xs">
-                {{ slide(pi) + 1 }} / {{ p.images.length }}
-                <span class="text-accent" aria-hidden="true">↕</span>
-              </span>
-
-              <!-- project number -->
-              <span class="pointer-events-none absolute bottom-4 left-6 font-display text-6xl font-light text-paper/30 md:text-7xl">
-                {{ p.index }}
-              </span>
-
-              <!-- arrows -->
               <button
                 type="button"
-                (click)="step(pi, -1, p); $event.stopPropagation()"
-                [attr.aria-label]="'Previous image — ' + p.title"
-                class="slider-arrow left-4"
+                class="next-project group absolute bottom-8 right-5 hidden cursor-pointer items-center gap-3 font-mono text-[8px] uppercase tracking-[0.18em] text-paper/30 transition-colors hover:text-paper lg:flex"
+                (click)="selectNextProject()"
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 1L3 7l6 6" stroke="currentColor" stroke-width="1.5"/></svg>
+                Next project
+                <span class="grid h-8 w-8 place-items-center rounded-full border border-paper/15 transition-all duration-300 group-hover:border-accent group-hover:text-accent" aria-hidden="true">↓</span>
               </button>
-              <button
-                type="button"
-                (click)="step(pi, 1, p); $event.stopPropagation()"
-                [attr.aria-label]="'Next image — ' + p.title"
-                class="slider-arrow right-4"
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 1l6 6-6 6" stroke="currentColor" stroke-width="1.5"/></svg>
-              </button>
-
-              <!-- progress segments -->
-              <div class="absolute bottom-5 right-5 flex gap-1.5">
-                @for (img of p.images; track img.src; let ii = $index) {
-                  <button
-                    type="button"
-                    (click)="goTo(pi, ii); $event.stopPropagation()"
-                    [attr.aria-label]="'Go to image ' + (ii + 1)"
-                    class="h-[3px] w-7 transition-colors duration-500"
-                    [style.background]="slide(pi) === ii ? '#b0704f' : 'rgba(239,239,239,0.25)'"
-                  ></button>
-                }
-              </div>
             </div>
-
-            <!-- meta -->
-            <div class="mt-6 flex items-start justify-between gap-6">
-              <div>
-                <div class="flex items-baseline gap-4">
-                  <button
-                    type="button"
-                    class="group/title text-left"
-                    data-cursor="View"
-                    (click)="openCase.emit(p)"
-                    [attr.aria-label]="'Open case study — ' + p.title"
-                  >
-                    <h3
-                      class="font-display text-2xl font-light text-paper underline-offset-4 transition-all duration-500 ease-expo group-hover:translate-x-2 group-hover/title:underline md:text-[2rem]"
-                    >
-                      {{ p.title }}
-                    </h3>
-                  </button>
-                  @if (p.url) {
-                    <a
-                      [href]="p.url"
-                      target="_blank"
-                      rel="noopener"
-                      aria-label="Visit live site"
-                      class="translate-y-1 font-mono text-lg text-accent opacity-0 transition-all duration-500 hover:text-paper group-hover:translate-y-0 group-hover:opacity-100"
-                      >↗</a
-                    >
-                  }
-                </div>
-                <p class="mt-1 font-mono text-[11px] uppercase tracking-[0.25em] text-paper/40">
-                  {{ p.category }} — {{ p.year }}
-                </p>
-                <p class="mt-4 max-w-md text-sm leading-relaxed text-paper/50">{{ p.description }}</p>
-                <button
-                  type="button"
-                  data-cursor="View"
-                  (click)="openCase.emit(p)"
-                  class="mt-5 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-accent transition-colors duration-300 hover:text-paper"
-                >
-                  Read the case study
-                  <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </button>
-                <div class="mt-4 flex flex-wrap gap-2">
-                  @for (s of p.stack; track s) {
-                    <span class="font-mono text-[10px] uppercase tracking-[0.15em] text-paper/40">{{ s }}</span>
-                    @if (!$last) {<span class="text-accent/60">·</span>}
-                  }
-                </div>
-              </div>
-            </div>
-          </article>
+          </div>
+        } @else {
+          <div class="mt-16 border-y border-paper/10 py-20 text-center md:mt-24">
+            <p class="font-display text-2xl font-light text-paper/65">Selected work is being prepared.</p>
+            <p class="mt-3 text-sm text-paper/35">Please check back soon.</p>
+          </div>
         }
       </div>
     </section>
   `,
+  styles: [
+    `
+      .work-section {
+        background: linear-gradient(180deg, #0a0a0a, #0b0a0a 48%, #0a0a0a);
+      }
+
+      .work-watermark {
+        position: absolute;
+        top: 2rem;
+        right: -0.03em;
+        color: rgba(239, 239, 239, 0.018);
+        font-family: Fraunces, Georgia, serif;
+        font-size: clamp(6rem, 17vw, 18rem);
+        font-weight: 300;
+        line-height: 1;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+
+      .work-viewer {
+        background: rgba(255, 255, 255, 0.008);
+      }
+
+      .project-picker {
+        cursor: pointer;
+        transition: background-color 350ms ease;
+      }
+
+      .project-picker:hover,
+      .project-picker.is-active {
+        background: rgba(239, 239, 239, 0.025);
+      }
+
+      .project-picker.is-active .picker-title {
+        color: #efefef;
+      }
+
+      .project-picker.is-active .picker-index {
+        color: #b0704f;
+      }
+
+      .project-picker.is-active .picker-line {
+        transform: scaleY(1);
+      }
+
+      .active-project {
+        animation: project-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      @keyframes project-enter {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .project-orb,
+      .project-orb-secondary {
+        pointer-events: none;
+        transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .project-stage:hover .project-orb {
+        transform: translate(5%, -7%) scale(1.12);
+      }
+
+      .project-stage:hover .project-orb-secondary {
+        transform: translate(-4%, 5%) scale(1.1);
+      }
+
+      .project-stage:hover .slider-arrow,
+      .slider.is-dragging .slider-arrow {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+      }
+
+      .tour-label {
+        transition: color 300ms ease;
+      }
+
+      .slider.touring .tour-label {
+        color: rgba(239, 239, 239, 0.72);
+      }
+
+      .screen-dot:hover span {
+        width: 1.5rem;
+      }
+
+      @media (max-width: 767px) {
+        .project-index-list {
+          scrollbar-gutter: stable;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .active-project {
+          animation: none;
+        }
+
+        .project-orb,
+        .project-orb-secondary,
+        .picker-line {
+          transition: none;
+        }
+      }
+    `,
+  ],
 })
 export class ProjectsComponent implements AfterViewInit, OnDestroy {
   private readonly content = inject(PortfolioContentService);
-  get projects() { return this.content.content().projects; }
-  @Output() readonly openCase = new EventEmitter<Project>();
-
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly zone = inject(NgZone);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly platformId = inject(PLATFORM_ID);
 
-  /** current slide index per project index */
-  private slides: Record<number, number> = {};
-  /** transient drag offset in px per project index */
-  private dragOffset: Record<number, number> = {};
-  /** project index currently being dragged, or -1 (signal so template reacts) */
+  @Output() readonly openCase = new EventEmitter<Project>();
+
+  readonly activeProjectIndex = signal(0);
   readonly dragging = signal(-1);
-  /** project index currently hovered (touring), or -1 */
   readonly hovering = signal(-1);
-  /** natural image size per slide, filled on load: "pi-ii" -> [w, h] */
-  private natSize: Record<string, [number, number]> = {};
+
+  private readonly slides: Record<number, number> = {};
+  private readonly dragOffset: Record<number, number> = {};
+  private readonly naturalSize: Record<string, [number, number]> = {};
   private dragStartX = 0;
   private dragStartOffset = 0;
-
-  private scrollListener = () => this.scheduleParallax();
   private scheduled = false;
+  private scrollListener = () => this.scheduleParallax();
+
+  get projects() {
+    return this.content.content().projects;
+  }
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+
     this.zone.runOutsideAngular(() => {
       window.addEventListener('scroll', this.scrollListener, { passive: true });
-      this.scheduleParallax();
       this.measureImages();
+      this.scheduleParallax();
     });
   }
 
-  /** cache natural sizes (via preload) so tour distance/duration are exact */
-  private measureImages(): void {
-    const el = this.host.nativeElement as HTMLElement;
-    const divs = Array.from(el.querySelectorAll('.slider-img')) as HTMLElement[];
-    divs.forEach((d) => {
-      const src = d.dataset['src'];
-      if (!src) return;
-      const pi = Number(d.dataset['pi']);
-      const ii = Number(d.dataset['ii']);
-      const probe = new Image();
-      probe.onload = () => {
-        this.natSize[`${pi}-${ii}`] = [probe.naturalWidth, probe.naturalHeight];
-        this.zone.run(() => this.cdr.markForCheck());
-      };
-      probe.src = src;
-    });
+  paddedProject(value: number): string {
+    return String(value).padStart(2, '0');
   }
 
-  onHoverStart(pi: number): void {
-    this.hovering.set(pi);
-  }
+  selectProject(index: number): void {
+    if (index < 0 || index >= this.projects.length || index === this.activeProjectIndex()) return;
 
-  onHoverEnd(pi: number): void {
-    if (this.hovering() === pi) this.hovering.set(-1);
-  }
-
-  /**
-   * Smart tour timing: the taller the page screenshot (relative to the
-   * slider viewport), the longer the top-to-bottom scroll takes,
-   * so every project reads at a similar perceived speed.
-   */
-  /** tour duration scales with how far the screenshot travels */
-  tourDur(pi: number, ii: number): string {
-    const extra = this.tourExtra(pi, ii);
-    if (extra < 40) return '7s';
-    const el = this.host.nativeElement as HTMLElement;
-    const slider = el?.querySelectorAll('.slider')[pi] as HTMLElement | undefined;
-    const boxH = slider?.clientHeight || 1;
-    return `${Math.min(1.6 + (extra / boxH) * 2.2, 14).toFixed(2)}s`;
-  }
-
-  slide(pi: number): number {
-    return this.slides[pi] ?? 0;
-  }
-
-  trackTransform(pi: number): string {
-    const offset = this.dragOffset[pi] ?? 0;
-    const el = this.host.nativeElement as HTMLElement;
-    const slider = el.querySelectorAll('.slider')[pi] as HTMLElement | undefined;
-    const width = slider?.clientWidth ?? 1;
-    const pct = (offset / width) * 100;
-    const x = `calc(${-this.slide(pi) * 100}% + ${pct}%)`;
-    return `translate3d(${x}, 0, 0)`;
-  }
-
-  /** rendered image height when shown at full slide width (for the pan wrapper) */
-  panHeight(pi: number, ii: number): string {
-    const nat = this.natSize[`${pi}-${ii}`];
-    const el = this.host.nativeElement as HTMLElement;
-    const slider = el?.querySelectorAll('.slider')[pi] as HTMLElement | undefined;
-    if (!nat || !slider || !slider.clientWidth) return '100%';
-    const imgH = slider.clientWidth * (nat[1] / nat[0]);
-    return imgH > slider.clientHeight ? `${imgH.toFixed(1)}px` : '100%';
-  }
-
-  /** vertical pan: 0 at rest, -(imgH - boxH) while touring the current slide */
-  panTransform(pi: number, ii: number): string {
-    if (!(this.hovering() === pi && this.slide(pi) === ii)) return 'translateY(0px)';
-    const extra = this.tourExtra(pi, ii);
-    return extra > 40 ? `translateY(${(-extra).toFixed(1)}px)` : 'translateY(0px)';
-  }
-
-  /** how many px the screenshot overflows the slider box for a slide */
-  private tourExtra(pi: number, ii: number): number {
-    const nat = this.natSize[`${pi}-${ii}`];
-    const el = this.host.nativeElement as HTMLElement;
-    const slider = el?.querySelectorAll('.slider')[pi] as HTMLElement | undefined;
-    if (!nat || !slider) return 0;
-    return (slider.clientWidth || 1) * (nat[1] / nat[0]) - (slider.clientHeight || 1);
-  }
-
-  step(pi: number, dir: number, p: Project): void {
-    const len = p.images.length;
-    this.slides[pi] = (this.slide(pi) + dir + len) % len;
-  }
-
-  goTo(pi: number, ii: number): void {
-    this.slides[pi] = ii;
-  }
-
-  onDragStart(e: PointerEvent, pi: number, p: Project): void {
-    if ((e.target as HTMLElement).closest('button')) return;
-    this.dragging.set(pi);
-    this.dragStartX = e.clientX;
-    this.dragStartOffset = 0;
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-  }
-
-  onDragMove(e: PointerEvent, pi: number): void {
-    if (this.dragging() !== pi) return;
-    this.dragStartOffset = e.clientX - this.dragStartX;
-    this.dragOffset[pi] = this.dragStartOffset;
-    // run inside Angular so the track transform updates live
-    this.zone.run(() => this.cdr.markForCheck());
-  }
-
-  onDragEnd(e: PointerEvent, pi: number, p: Project): void {
-    if (this.dragging() !== pi) return;
-    const delta = this.dragStartOffset;
     this.dragging.set(-1);
-    this.dragOffset[pi] = 0;
-    const el = e.currentTarget as HTMLElement;
-    const threshold = Math.min(el.clientWidth * 0.14, 90);
-    if (delta < -threshold) this.step(pi, 1, p);
-    else if (delta > threshold) this.step(pi, -1, p);
-  }
+    this.hovering.set(-1);
+    this.activeProjectIndex.set(index);
 
-  onDragLeave(e: PointerEvent, pi: number, p: Project): void {
-    // pointer capture keeps events flowing; only reset if buttons released (edge case)
-    if (this.dragging() === pi && !e.buttons) {
-      this.dragging.set(-1);
-      this.dragOffset[pi] = 0;
+    if (isPlatformBrowser(this.platformId)) {
+      requestAnimationFrame(() => this.scheduleParallax());
     }
   }
 
-  private scheduleParallax(): void {
-    if (this.scheduled) return;
-    this.scheduled = true;
-    requestAnimationFrame(() => {
-      this.scheduled = false;
-      const vh = window.innerHeight;
-      const el = this.host.nativeElement as HTMLElement;
-      const cards = Array.from(el.querySelectorAll('.slider')) as HTMLElement[];
-      cards.forEach((card: HTMLElement) => {
-        const r = card.getBoundingClientRect();
-        const progress = (r.top + r.height / 2 - vh / 2) / vh;
-        card.style.transform = `translateY(${progress * -22}px)`;
-      });
-    });
+  selectNextProject(): void {
+    if (!this.projects.length) return;
+    this.selectProject((this.activeProjectIndex() + 1) % this.projects.length);
+  }
+
+  onHoverStart(projectIndex: number): void {
+    this.hovering.set(projectIndex);
+  }
+
+  onHoverEnd(projectIndex: number): void {
+    if (this.hovering() === projectIndex) this.hovering.set(-1);
+  }
+
+  tourDur(projectIndex: number, imageIndex: number): string {
+    const extra = this.tourExtra(projectIndex, imageIndex);
+    if (extra < 40) return '7s';
+
+    const boxHeight = this.sliderElement()?.clientHeight || 1;
+    return `${Math.min(1.6 + (extra / boxHeight) * 2.2, 14).toFixed(2)}s`;
+  }
+
+  slide(projectIndex: number): number {
+    return this.slides[projectIndex] ?? 0;
+  }
+
+  trackTransform(projectIndex: number): string {
+    const offset = this.dragOffset[projectIndex] ?? 0;
+    const width = this.sliderElement()?.clientWidth ?? 1;
+    const offsetPercent = (offset / width) * 100;
+    return `translate3d(calc(${-this.slide(projectIndex) * 100}% + ${offsetPercent}%), 0, 0)`;
+  }
+
+  panHeight(projectIndex: number, imageIndex: number): string {
+    const naturalSize = this.naturalSize[`${projectIndex}-${imageIndex}`];
+    const slider = this.sliderElement();
+    if (!naturalSize || !slider || !slider.clientWidth) return '100%';
+
+    const imageHeight = slider.clientWidth * (naturalSize[1] / naturalSize[0]);
+    return imageHeight > slider.clientHeight ? `${imageHeight.toFixed(1)}px` : '100%';
+  }
+
+  panTransform(projectIndex: number, imageIndex: number): string {
+    if (this.hovering() !== projectIndex || this.slide(projectIndex) !== imageIndex) return 'translateY(0px)';
+
+    const extra = this.tourExtra(projectIndex, imageIndex);
+    return extra > 40 ? `translateY(${(-extra).toFixed(1)}px)` : 'translateY(0px)';
+  }
+
+  step(projectIndex: number, direction: number, project: Project): void {
+    const imageCount = project.images.length;
+    if (!imageCount) return;
+    this.slides[projectIndex] = (this.slide(projectIndex) + direction + imageCount) % imageCount;
+  }
+
+  goTo(projectIndex: number, imageIndex: number): void {
+    this.slides[projectIndex] = imageIndex;
+  }
+
+  onDragStart(event: PointerEvent, projectIndex: number): void {
+    if ((event.target as HTMLElement).closest('button')) return;
+
+    this.dragging.set(projectIndex);
+    this.dragStartX = event.clientX;
+    this.dragStartOffset = 0;
+    (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+  }
+
+  onDragMove(event: PointerEvent, projectIndex: number): void {
+    if (this.dragging() !== projectIndex) return;
+
+    this.dragStartOffset = event.clientX - this.dragStartX;
+    this.dragOffset[projectIndex] = this.dragStartOffset;
+    this.zone.run(() => this.cdr.markForCheck());
+  }
+
+  onDragEnd(event: PointerEvent, projectIndex: number, project: Project): void {
+    if (this.dragging() !== projectIndex) return;
+
+    const delta = this.dragStartOffset;
+    this.dragging.set(-1);
+    this.dragOffset[projectIndex] = 0;
+
+    const threshold = Math.min((event.currentTarget as HTMLElement).clientWidth * 0.14, 90);
+    if (delta < -threshold) this.step(projectIndex, 1, project);
+    if (delta > threshold) this.step(projectIndex, -1, project);
+  }
+
+  onDragLeave(event: PointerEvent, projectIndex: number, project: Project): void {
+    if (this.dragging() === projectIndex && !event.buttons) {
+      this.onDragEnd(event, projectIndex, project);
+    }
   }
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
       window.removeEventListener('scroll', this.scrollListener);
     }
+  }
+
+  private measureImages(): void {
+    this.projects.forEach((project, projectIndex) => {
+      project.images.forEach((image, imageIndex) => {
+        const probe = new Image();
+        probe.onload = () => {
+          this.naturalSize[`${projectIndex}-${imageIndex}`] = [probe.naturalWidth, probe.naturalHeight];
+          this.zone.run(() => this.cdr.markForCheck());
+        };
+        probe.src = image.src;
+      });
+    });
+  }
+
+  private sliderElement(): HTMLElement | undefined {
+    const slider = (this.host.nativeElement as HTMLElement).querySelector('.slider') as HTMLElement | null;
+    return slider ?? undefined;
+  }
+
+  private tourExtra(projectIndex: number, imageIndex: number): number {
+    const naturalSize = this.naturalSize[`${projectIndex}-${imageIndex}`];
+    const slider = this.sliderElement();
+    if (!naturalSize || !slider) return 0;
+
+    return (slider.clientWidth || 1) * (naturalSize[1] / naturalSize[0]) - (slider.clientHeight || 1);
+  }
+
+  private scheduleParallax(): void {
+    if (this.scheduled) return;
+    this.scheduled = true;
+
+    requestAnimationFrame(() => {
+      this.scheduled = false;
+      const slider = this.sliderElement();
+      if (!slider) return;
+
+      const viewportHeight = window.innerHeight || 1;
+      const rect = slider.getBoundingClientRect();
+      const progress = (rect.top + rect.height / 2 - viewportHeight / 2) / viewportHeight;
+      slider.style.transform = `translateY(${progress * -18}px)`;
+    });
   }
 }

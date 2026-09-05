@@ -10,7 +10,7 @@ import { AdminAuthService } from '../services/admin-auth.service';
   template: `
     <div class="admin-root min-h-screen bg-ink text-paper">
       <header class="admin-mobile-header">
-        <a routerLink="/admin" class="font-display text-2xl">SH</a>
+        <a routerLink="/admin" aria-label="Portfolio Admin home"><img class="admin-mobile-brand" src="brand-mark.svg" alt="" width="36" height="36" /></a>
         <button type="button" class="admin-icon-button" (click)="menuOpen.set(!menuOpen())" aria-label="Toggle navigation">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
         </button>
@@ -18,7 +18,7 @@ import { AdminAuthService } from '../services/admin-auth.service';
 
       <aside class="admin-sidebar" [class.is-open]="menuOpen()">
         <a routerLink="/admin" class="admin-brand" (click)="menuOpen.set(false)">
-          <span class="admin-brand-mark">SH</span>
+          <img class="admin-brand-mark" src="brand-mark.svg" alt="" width="52" height="52" />
           <span>Portfolio Admin</span>
         </a>
         <div class="admin-sidebar-rule"></div>

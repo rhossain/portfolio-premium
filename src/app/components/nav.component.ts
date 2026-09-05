@@ -26,24 +26,9 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
           href="#top"
           (click)="go($event, '#top')"
           class="logo group flex items-center gap-3"
-          data-cursor
           aria-label="Home"
         >
-          <svg class="logo-mark" width="44" height="44" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-            <circle class="logo-ring" cx="24" cy="24" r="22" stroke="currentColor" stroke-width="1" />
-            <circle class="logo-ring logo-ring-dash" cx="24" cy="24" r="16.5" stroke="currentColor" stroke-width="0.75" />
-            <!-- S -->
-            <path
-              d="M29.5 14.5c-1.6-1.7-3.8-2.6-6-2.4-3 .2-5.3 2.3-5.3 5 0 6.3 12 3.2 12 9.9 0 3-2.6 5.2-5.9 5.2-2.5 0-4.8-1.2-6.3-3.1"
-              stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linecap="round"
-            />
-            <!-- H crossbar -->
-            <path d="M12 24h24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-            <!-- accent dot -->
-            <circle class="logo-dot" cx="38.5" cy="11" r="2.4" fill="#b0704f" stroke="none" />
-          </svg>
+          <img class="logo-mark" src="brand-mark.svg" alt="" width="44" height="44" aria-hidden="true" />
         </a>
 
         <div
@@ -88,7 +73,7 @@ export class NavComponent {
   go(event: Event, target: string): void {
     event.preventDefault();
     if (target === '#top') {
-      this.scroll.scrollTo(0);
+      this.scroll.scrollTo('#top');
     } else {
       this.scroll.scrollTo(target);
     }

@@ -12,7 +12,7 @@ import { AdminAuthService, PORTFOLIO_ADMIN_EMAIL } from '../services/admin-auth.
     <main class="admin-login min-h-screen bg-ink text-paper">
       <a routerLink="/" class="admin-back-link">← Back to portfolio</a>
       <section class="admin-login-panel" aria-labelledby="login-title">
-        <div class="admin-mark" aria-hidden="true">SH</div>
+        <img class="admin-mark" src="brand-mark.svg" alt="" width="64" height="64" aria-hidden="true" />
         <p class="admin-kicker">Portfolio Admin</p>
         <h1 id="login-title" class="admin-login-title">Welcome back.</h1>
         <p class="admin-login-copy">Sign in with your authorized administrator account.</p>
