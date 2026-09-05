@@ -30,7 +30,7 @@ describe('ProjectsComponent', () => {
 
     expect(selectors.length).toBe(DEFAULT_PORTFOLIO.projects.length);
     expect(selectors[0].getAttribute('aria-pressed')).toBe('true');
-    expect(host.querySelector('.active-project h3')?.textContent).toContain('ngCommerce');
+    expect(host.querySelector('.active-project h3')?.textContent).toContain('Styloviz');
   });
 
   it('updates the stage when another project is selected', () => {
@@ -42,7 +42,7 @@ describe('ProjectsComponent', () => {
 
     expect(selectors[0].getAttribute('aria-pressed')).toBe('false');
     expect(selectors[1].getAttribute('aria-pressed')).toBe('true');
-    expect(host.querySelector('.active-project h3')?.textContent).toContain('Nop Kalles');
+    expect(host.querySelector('.active-project h3')?.textContent).toContain('ngCommerce');
   });
 
   it('emits the active project when its case study is opened', () => {
@@ -52,6 +52,6 @@ describe('ProjectsComponent', () => {
     const button = fixture.nativeElement.querySelector('.case-study-link') as HTMLButtonElement;
     button.click();
 
-    expect(emitted).toEqual(['ngCommerce']);
+    expect(emitted).toEqual(['Styloviz']);
   });
 });

@@ -41,7 +41,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
           </div>
 
           <p class="max-w-xs text-sm leading-relaxed text-paper/42 md:col-span-3 md:justify-self-end">
-            A curated view of commerce, property and brand platforms — engineered across screens and stacks.
+            A curated view of product systems, commerce and digital platforms — engineered across screens and stacks.
           </p>
         </header>
 

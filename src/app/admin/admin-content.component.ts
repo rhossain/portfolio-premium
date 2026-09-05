@@ -126,20 +126,58 @@ type Section = 'profile' | 'experience' | 'projects' | 'skills' | 'navigation' |
 
           @case ('projects') {
             <div class="admin-split-editor projects">
-              <aside class="admin-record-list">
-                <div class="admin-record-list-title"><h2>Projects</h2><button type="button" (click)="addProject()">+</button></div>
-                @for (project of content.projects; track $index; let i = $index) {
-                  <button type="button" class="admin-record" [class.is-selected]="selectedProject() === i" (click)="selectedProject.set(i)">
-                    <strong>{{ project.index }} · {{ project.title || 'Untitled project' }}</strong><span>{{ project.category || 'Category' }} · {{ project.year || 'Year' }}</span>
-                  </button>
-                }
+              <aside class="admin-record-list" aria-labelledby="project-list-title">
+                <div class="admin-record-list-title">
+                  <h2 id="project-list-title">Projects</h2>
+                  <button type="button" aria-label="Add project" title="Add project" (click)="addProject()">+</button>
+                </div>
+                <p class="admin-reorder-help" id="project-order-help">This is the portfolio order. Use the arrows to move a project, then save the draft.</p>
+                <div class="admin-project-records" role="list" aria-describedby="project-order-help">
+                  @for (project of content.projects; track project; let i = $index) {
+                    <div class="admin-record-row" role="listitem" [class.is-selected]="selectedProject() === i">
+                      <button
+                        type="button"
+                        class="admin-record admin-project-record-select"
+                        [class.is-selected]="selectedProject() === i"
+                        [attr.aria-pressed]="selectedProject() === i"
+                        (click)="selectedProject.set(i)"
+                      >
+                        <strong>{{ project.index }} · {{ project.title || 'Untitled project' }}</strong>
+                        <span>{{ project.category || 'Category' }} · {{ project.year || 'Year' }}</span>
+                      </button>
+                      <div class="admin-record-order" role="group" [attr.aria-label]="'Change position for ' + (project.title || 'Untitled project') + ', currently ' + (i + 1) + ' of ' + content.projects.length">
+                        <button
+                          type="button"
+                          class="admin-order-button"
+                          [disabled]="i === 0 || busy()"
+                          [attr.aria-label]="'Move ' + (project.title || 'Untitled project') + ' at position ' + (i + 1) + ' up'"
+                          title="Move up"
+                          (click)="moveProject(i, -1)"
+                        >
+                          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 10.5 8 5l5 5.5" /></svg>
+                        </button>
+                        <button
+                          type="button"
+                          class="admin-order-button"
+                          [disabled]="i === content.projects.length - 1 || busy()"
+                          [attr.aria-label]="'Move ' + (project.title || 'Untitled project') + ' at position ' + (i + 1) + ' down'"
+                          title="Move down"
+                          (click)="moveProject(i, 1)"
+                        >
+                          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 5.5 5 5.5 5-5.5" /></svg>
+                        </button>
+                      </div>
+                    </div>
+                  }
+                </div>
+                <p class="admin-reorder-status" role="status" aria-live="polite">{{ reorderMessage() }}</p>
               </aside>
               @if (currentProject(content); as project) {
                 <div class="admin-project-editor">
                   <section class="admin-form-section">
                     <div class="admin-section-heading"><h2>Project details</h2><button class="admin-remove" type="button" (click)="deleteProject()">Delete project</button></div>
                     <div class="admin-grid-3">
-                      <label class="admin-field"><span>Index</span><input [(ngModel)]="project.index" (ngModelChange)="markDirty()" /></label>
+                      <label class="admin-field"><span>Position <small>managed by order</small></span><input [value]="project.index" readonly /></label>
                       <label class="admin-field"><span>Category</span><input [(ngModel)]="project.category" (ngModelChange)="markDirty()" /></label>
                       <label class="admin-field"><span>Year</span><input [(ngModel)]="project.year" (ngModelChange)="markDirty()" /></label>
                     </div>
@@ -172,7 +210,6 @@ type Section = 'profile' | 'experience' | 'projects' | 'skills' | 'navigation' |
                         </div>
                       }
                     </div>
-                    <div class="admin-order-actions"><button type="button" (click)="move(content.projects, selectedProject(), -1)">Move project up</button><button type="button" (click)="move(content.projects, selectedProject(), 1)">Move project down</button></div>
                   </section>
                 </div>
               }
@@ -250,6 +287,7 @@ export class AdminContentComponent implements OnInit, OnDestroy {
   readonly message = signal<string | null>(null);
   readonly selectedExperience = signal(0);
   readonly selectedProject = signal(0);
+  readonly reorderMessage = signal('');
   readonly admin = inject(PortfolioAdminService);
   private readonly route = inject(ActivatedRoute);
   private routeSubscription?: Subscription;
@@ -276,6 +314,7 @@ export class AdminContentComponent implements OnInit, OnDestroy {
       this.document.set(document);
       this.draft.set(structuredClone(document.draft));
       this.dirty.set(false);
+      this.reorderMessage.set('');
     } catch (error) {
       this.error.set(this.errorMessage(error));
     } finally {
@@ -288,7 +327,7 @@ export class AdminContentComponent implements OnInit, OnDestroy {
   }
 
   sectionDescription(): string {
-    return { profile: 'Manage your identity, introduction and portraits.', experience: 'Add, reorder or update your career history.', projects: 'Build case studies and manage their media.', skills: 'Keep capability groups concise and current.', navigation: 'Manage navigation, marquee and social destinations.', settings: 'Export, import and review document status.' }[this.section()];
+    return { profile: 'Manage your identity, introduction and portraits.', experience: 'Add, reorder or update your career history.', projects: 'Build, reorder and publish case studies and their media.', skills: 'Keep capability groups concise and current.', navigation: 'Manage navigation, marquee and social destinations.', settings: 'Export, import and review document status.' }[this.section()];
   }
 
   markDirty(): void { this.dirty.set(true); this.message.set(null); this.formError.set(null); }
@@ -355,13 +394,33 @@ export class AdminContentComponent implements OnInit, OnDestroy {
     const content = this.draft(); if (!content) return;
     const next = content.projects.length + 1;
     content.projects.push({ index: String(next).padStart(2, '0'), title: 'Untitled project', category: '', year: String(new Date().getFullYear()), description: '', stack: [], images: [], palette: { base: '#141210', orb: '#b0704f', orb2: '#788c8c' }, wide: false, caseStudy: { role: '', overview: '', highlights: [] } });
-    this.selectedProject.set(content.projects.length - 1); this.touch();
+    this.renumberProjects(content.projects);
+    this.selectedProject.set(content.projects.length - 1);
+    this.reorderMessage.set(`Project added at position ${content.projects.length}.`);
+    this.touchProjectOrder(content);
   }
 
   deleteProject(): void {
     const content = this.draft(); if (!content || !confirm('Delete this project from the draft? Its uploaded images will remain until removed separately.')) return;
     content.projects.splice(this.selectedProject(), 1);
-    this.selectedProject.set(Math.max(0, this.selectedProject() - 1)); this.touch();
+    this.renumberProjects(content.projects);
+    this.selectedProject.set(Math.max(0, this.selectedProject() - 1));
+    this.reorderMessage.set('Project removed. Remaining project positions were updated.');
+    this.touchProjectOrder(content);
+  }
+
+  moveProject(index: number, direction: -1 | 1): void {
+    const content = this.draft();
+    if (!content) return;
+    const target = index + direction;
+    if (index < 0 || target < 0 || target >= content.projects.length) return;
+
+    const [project] = content.projects.splice(index, 1);
+    content.projects.splice(target, 0, project);
+    this.renumberProjects(content.projects);
+    this.selectedProject.set(target);
+    this.reorderMessage.set(`${project.title || 'Untitled project'} moved to position ${target + 1} of ${content.projects.length}.`);
+    this.touchProjectOrder(content);
   }
 
   addStat(): void { const content = this.draft(); if (!content) return; content.about.stats.push({ value: '', label: '' }); this.touch(); }
@@ -375,7 +434,6 @@ export class AdminContentComponent implements OnInit, OnDestroy {
     const target = index + direction;
     if (index < 0 || target < 0 || target >= items.length) return;
     [items[index], items[target]] = [items[target], items[index]];
-    if (items === this.draft()?.projects) this.selectedProject.set(target);
     if (items === this.draft()?.experience) this.selectedExperience.set(target);
     this.touch();
   }
@@ -427,6 +485,8 @@ export class AdminContentComponent implements OnInit, OnDestroy {
   }
 
   private touch(): void { const content = this.draft(); if (content) this.draft.set(structuredClone(content)); this.markDirty(); }
+  private touchProjectOrder(content: PortfolioContent): void { this.draft.set({ ...content, projects: [...content.projects] }); this.markDirty(); }
+  private renumberProjects(projects: Project[]): void { projects.forEach((project, index) => { project.index = String(index + 1).padStart(2, '0'); }); }
   private slug(value: string): string { return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'project'; }
   private errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error); }
 

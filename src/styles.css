@@ -392,15 +392,37 @@ html {
 .admin-record-list { position: sticky; top: 30px; border-top: 1px solid var(--admin-border); }
 .admin-record-list-title { display: flex; align-items: center; justify-content: space-between; padding: 18px 14px; border-bottom: 1px solid var(--admin-border); }
 .admin-record-list-title h2 { font-family: Fraunces, serif; font-size: 22px; font-weight: 300; }
-.admin-record-list-title button { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid var(--admin-border); color: #b0704f; font-size: 20px; }
+.admin-record-list-title button { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid var(--admin-border); color: #b0704f; font-size: 20px; cursor: pointer; transition: border-color .2s, background .2s; }
+.admin-record-list-title button:hover,
+.admin-record-list-title button:focus-visible { border-color: #b0704f; background: rgba(176,112,79,.1); }
+.admin-record-list-title button:focus-visible { outline: 1px solid #b0704f; outline-offset: 3px; }
+.admin-reorder-help { padding: 14px; border-bottom: 1px solid var(--admin-border); color: var(--admin-muted); font-size: 10px; line-height: 1.65; }
+.admin-project-records { border-bottom: 1px solid var(--admin-border); }
+.admin-record-row { display: grid; grid-template-columns: minmax(0, 1fr) 40px; border-bottom: 1px solid var(--admin-border); transition: background .2s, box-shadow .2s; }
+.admin-record-row:last-child { border-bottom: 0; }
+.admin-record-row:hover,
+.admin-record-row.is-selected { background: rgba(239,239,239,.04); }
+.admin-record-row.is-selected { box-shadow: inset 3px 0 #b0704f; }
 .admin-record { display: block; width: 100%; padding: 16px 14px; border-bottom: 1px solid var(--admin-border); color: rgba(239,239,239,.62); text-align: left; }
 .admin-record:hover,
 .admin-record.is-selected { background: rgba(239,239,239,.04); color: #efefef; }
 .admin-record.is-selected { box-shadow: inset 3px 0 #b0704f; }
+.admin-record:focus-visible { outline: 1px solid #b0704f; outline-offset: -3px; }
+.admin-record-row .admin-record { border-bottom: 0; }
+.admin-record-row .admin-record.is-selected { background: transparent; box-shadow: none; }
 .admin-record strong,
 .admin-record span { display: block; }
 .admin-record strong { font-size: 12px; font-weight: 500; }
 .admin-record span { margin-top: 5px; color: var(--admin-muted); font-size: 10px; }
+.admin-record-order { display: grid; align-content: center; border-left: 1px solid var(--admin-border); }
+.admin-order-button { display: grid; width: 40px; min-height: 40px; place-items: center; color: var(--admin-muted); cursor: pointer; transition: background .2s, color .2s; }
+.admin-order-button + .admin-order-button { border-top: 1px solid var(--admin-border); }
+.admin-order-button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
+.admin-order-button:hover:not(:disabled),
+.admin-order-button:focus-visible { background: rgba(176,112,79,.12); color: #d89a73; }
+.admin-order-button:focus-visible { outline: 1px solid #b0704f; outline-offset: -3px; }
+.admin-order-button:disabled { cursor: default; opacity: .22; }
+.admin-reorder-status { min-height: 42px; padding: 12px 14px 0; color: #d89a73; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .08em; line-height: 1.55; }
 .admin-project-editor { display: grid; gap: 38px; min-width: 0; }
 .admin-order-actions { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--admin-border); }
 .admin-media-list { margin-top: 22px; border-top: 1px solid var(--admin-border); }

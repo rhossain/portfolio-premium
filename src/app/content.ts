@@ -190,6 +190,34 @@ export interface Project {
 export const PROJECTS: Project[] = [
   {
     index: '01',
+    title: 'Styloviz',
+    category: 'UI Library',
+    year: '2026',
+    description:
+      'A production-ready Angular UI ecosystem with 120 components, backend-ready state contracts, three application templates and more than 500 icons — designed, engineered and documented end to end.',
+    stack: ['Angular 21', 'Tailwind CSS 4', 'TypeScript', 'npm'],
+    url: 'https://styloviz.dev',
+    images: [
+      storageAsset('work/styloviz-1.webp', 'Styloviz — backend-ready component overview'),
+      storageAsset('work/styloviz-2.webp', 'Styloviz — shared data-state architecture'),
+      storageAsset('work/styloviz-3.webp', 'Styloviz — interactive component playground'),
+    ],
+    palette: { base: '#08101f', orb: '#2563eb', orb2: '#06b6d4' },
+    wide: true,
+    caseStudy: {
+      role: 'Creator & Lead Engineer',
+      overview:
+        'Styloviz is an Angular component ecosystem built for teams shipping real applications. It combines reusable interface primitives with shared backend-ready state contracts, production templates, documentation and an interactive playground.',
+      highlights: [
+        '120 standalone components, three production templates and a tree-shakeable library of more than 500 icons',
+        'Shared loading, error, retry and empty-state contracts across 92 components that accept live data',
+        'Angular Signals, OnPush change detection, strict TypeScript, accessible interactions and light/dark theming',
+        'Free and Pro npm packages supported by live documentation, editable examples and zero runtime dependencies',
+      ],
+    },
+  },
+  {
+    index: '02',
     title: 'ngCommerce',
     category: 'E-commerce',
     year: '2024',
@@ -217,7 +245,7 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    index: '02',
+    index: '03',
     title: 'Nop Kalles',
     category: 'E-commerce',
     year: '2023',
@@ -244,7 +272,7 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    index: '03',
+    index: '04',
     title: 'Fortune',
     category: 'E-commerce',
     year: '2022',
@@ -271,7 +299,7 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    index: '04',
+    index: '05',
     title: 'My Realty',
     category: 'Real Estate',
     year: '2022',
@@ -298,7 +326,7 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    index: '05',
+    index: '06',
     title: 'Blueliner',
     category: 'Corporate',
     year: '2015',
@@ -325,7 +353,7 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    index: '06',
+    index: '07',
     title: 'Kids Toys',
     category: 'E-commerce',
     year: '2014',
@@ -372,7 +400,7 @@ export const SOCIALS: SocialLink[] = [
   { label: 'LinkedIn', url: 'https://www.linkedin.com/in/rhossain' },
   { label: 'Facebook', url: 'https://www.facebook.com/rhossainbd' },
   { label: 'Instagram', url: 'https://www.instagram.com/rshossain.bd' },
-  { label: 'Skype', url: 'https://join.skype.com/invite/vwNHYMYW5jvJ' },
+  { label: 'WhatsApp', url: 'https://wa.me/8801713204761' },
 ];
 
 export const DEFAULT_PORTFOLIO: PortfolioContent = {
