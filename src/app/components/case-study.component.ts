@@ -10,6 +10,7 @@ import {
   PLATFORM_ID,
   ViewChild,
   inject,
+  signal,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Project } from '../content';
@@ -23,7 +24,7 @@ import { ScrollService } from '../services/scroll.service';
     @if (project) {
       <div
         class="case-study fixed inset-0 z-90"
-        [class.is-open]="open"
+        [class.is-open]="open()"
         role="dialog"
         aria-modal="true"
         [attr.aria-label]="project.title + ' — case study'"
@@ -162,7 +163,7 @@ export class CaseStudyComponent implements OnChanges, OnDestroy {
   @Output() closed = new EventEmitter<void>();
   @ViewChild('scroller') scroller?: ElementRef<HTMLElement>;
 
-  open = false;
+  readonly open = signal(false);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly scroll = inject(ScrollService);
   private escListener = (e: KeyboardEvent) => {
@@ -173,7 +174,7 @@ export class CaseStudyComponent implements OnChanges, OnDestroy {
     if (this.project && isPlatformBrowser(this.platformId)) {
       this.scroll.stop();
       requestAnimationFrame(() => {
-        this.open = true;
+        this.open.set(true);
         document.documentElement.classList.add('case-open');
         window.addEventListener('keydown', this.escListener);
       });
@@ -181,7 +182,7 @@ export class CaseStudyComponent implements OnChanges, OnDestroy {
   }
 
   requestClose(): void {
-    this.open = false;
+    this.open.set(false);
     this.scroll.start();
     document.documentElement.classList.remove('case-open');
     window.removeEventListener('keydown', this.escListener);

@@ -25,6 +25,8 @@ export class RevealDirective implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     const node = this.el.nativeElement;
+    if (typeof IntersectionObserver === 'undefined' ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     node.setAttribute('data-reveal', '');
     node.style.setProperty('--reveal-delay', `${this.revealDelay}ms`);
 
@@ -38,7 +40,8 @@ export class RevealDirective implements AfterViewInit, OnDestroy {
             }
           }
         },
-        { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+        // Prepare content before it reaches the viewport, including tall blocks.
+        { threshold: 0, rootMargin: '250px 0px' }
       );
       this.observer.observe(node);
     });

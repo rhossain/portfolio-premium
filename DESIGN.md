@@ -63,6 +63,8 @@ Use the shared 64-unit `SH` artwork. At navigation and admin sizes it renders fr
 
 The navigation mark may lift by two pixels and rotate two degrees on hover. Pressed state returns it to rest and scales subtly. Reduced-motion users receive an effectively immediate transition. Preloader motion belongs to the containing page transition; the artwork itself stays still.
 
+Preserve existing motion features: animated film grain, blurred/staggered scroll reveals, project parallax, and screenshot hover tours. Optimize their work rather than removing the effects: start reveals 250px before the viewport without permanent layer promotion; size the grain layer only large enough to cover its movement; schedule parallax outside Angular and skip offscreen style writes. Load screenshot images lazily and measure their loaded dimensions rather than prefetching the entire portfolio. Reduced-motion users receive visible content immediately and native wheel scrolling.
+
 ### Capability Map
 
 Use a paper field, ink framing, and three discipline accents (rust, sage, lavender) to separate the capability section from the dark project viewer. All tools stay visible simultaneously so breadth is understood without interaction. Selection updates the compact footer readout; it never implies a proficiency score or hides content behind hover. On narrow screens each discipline stacks above its signal grid without horizontal scrolling.

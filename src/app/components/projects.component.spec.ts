@@ -54,4 +54,36 @@ describe('ProjectsComponent', () => {
 
     expect(emitted).toEqual(['Styloviz']);
   });
+
+  it('loads screenshots lazily without probing every project image', () => {
+    const imageConstructor = spyOn(window, 'Image').and.callThrough();
+    const otherFixture = TestBed.createComponent(ProjectsComponent);
+    otherFixture.detectChanges();
+    const images = otherFixture.nativeElement.querySelectorAll('.slider-img') as NodeListOf<HTMLImageElement>;
+
+    expect(imageConstructor).not.toHaveBeenCalled();
+    expect(images.length).toBe(DEFAULT_PORTFOLIO.projects[0].images.length);
+    expect(Array.from(images).every(image => image.loading === 'lazy' && image.decoding === 'async')).toBeTrue();
+    otherFixture.destroy();
+  });
+
+  it('uses the loaded screenshot dimensions to preserve its full-page tour', () => {
+    const host = fixture.nativeElement as HTMLElement;
+    const slider = host.querySelector('.slider') as HTMLElement;
+    const image = host.querySelector('.slider-img') as HTMLImageElement;
+    Object.defineProperties(slider, {
+      clientWidth: { value: 800 },
+      clientHeight: { value: 450 },
+    });
+    Object.defineProperties(image, {
+      naturalWidth: { value: 1200 },
+      naturalHeight: { value: 2400 },
+    });
+    image.dispatchEvent(new Event('load'));
+    fixture.componentInstance.onHoverStart(0);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.panHeight(0, 0)).toBe('1600.0px');
+    expect(fixture.componentInstance.panTransform(0, 0)).toBe('translateY(-1150.0px)');
+  });
 });

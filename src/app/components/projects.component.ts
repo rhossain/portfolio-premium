@@ -128,12 +128,15 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                               [style.--tour-dur]="tourDur(pi, ii)"
                               [class.panning]="hovering() === pi && slide(pi) === ii"
                             >
-                              <div
+                              <img
                                 class="slider-img absolute inset-0"
-                                role="img"
-                                [attr.aria-label]="image.alt || project.title + ' — screen ' + (ii + 1)"
-                                [style.background-image]="'url(' + image.src + ')'"
-                              ></div>
+                                [src]="image.src"
+                                [alt]="image.alt || project.title + ' — screen ' + (ii + 1)"
+                                loading="lazy"
+                                decoding="async"
+                                draggable="false"
+                                (load)="onImageLoad($event, image.src)"
+                              />
                             </div>
                           </div>
                         }
@@ -381,6 +384,9 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   private readonly zone = inject(NgZone);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly platformId = inject(PLATFORM_ID);
+  private parallaxFrame = 0;
+  private readonly scrollListener = () => this.scheduleParallax();
+  private parallaxEnabled = false;
 
   @Output() readonly openCase = new EventEmitter<Project>();
 
@@ -393,8 +399,6 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   private readonly naturalSize: Record<string, [number, number]> = {};
   private dragStartX = 0;
   private dragStartOffset = 0;
-  private scheduled = false;
-  private scrollListener = () => this.scheduleParallax();
 
   get projects() {
     return this.content.content().projects;
@@ -402,12 +406,20 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
+    this.parallaxEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!this.parallaxEnabled) return;
     this.zone.runOutsideAngular(() => {
       window.addEventListener('scroll', this.scrollListener, { passive: true });
-      this.measureImages();
+      window.addEventListener('resize', this.scrollListener, { passive: true });
       this.scheduleParallax();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    window.removeEventListener('scroll', this.scrollListener);
+    window.removeEventListener('resize', this.scrollListener);
+    cancelAnimationFrame(this.parallaxFrame);
   }
 
   paddedProject(value: number): string {
@@ -420,10 +432,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     this.dragging.set(-1);
     this.hovering.set(-1);
     this.activeProjectIndex.set(index);
-
-    if (isPlatformBrowser(this.platformId)) {
-      requestAnimationFrame(() => this.scheduleParallax());
-    }
+    if (this.parallaxEnabled) this.zone.runOutsideAngular(() => this.scheduleParallax());
   }
 
   selectNextProject(): void {
@@ -459,7 +468,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   }
 
   panHeight(projectIndex: number, imageIndex: number): string {
-    const naturalSize = this.naturalSize[`${projectIndex}-${imageIndex}`];
+    const naturalSize = this.naturalSize[this.projects[projectIndex]?.images[imageIndex]?.src];
     const slider = this.sliderElement();
     if (!naturalSize || !slider || !slider.clientWidth) return '100%';
 
@@ -519,23 +528,11 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      window.removeEventListener('scroll', this.scrollListener);
-    }
-  }
-
-  private measureImages(): void {
-    this.projects.forEach((project, projectIndex) => {
-      project.images.forEach((image, imageIndex) => {
-        const probe = new Image();
-        probe.onload = () => {
-          this.naturalSize[`${projectIndex}-${imageIndex}`] = [probe.naturalWidth, probe.naturalHeight];
-          this.zone.run(() => this.cdr.markForCheck());
-        };
-        probe.src = image.src;
-      });
-    });
+  onImageLoad(event: Event, source: string): void {
+    const image = event.target as HTMLImageElement;
+    if (!image.naturalWidth || !image.naturalHeight) return;
+    this.naturalSize[source] = [image.naturalWidth, image.naturalHeight];
+    this.cdr.markForCheck();
   }
 
   private sliderElement(): HTMLElement | undefined {
@@ -544,7 +541,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   }
 
   private tourExtra(projectIndex: number, imageIndex: number): number {
-    const naturalSize = this.naturalSize[`${projectIndex}-${imageIndex}`];
+    const naturalSize = this.naturalSize[this.projects[projectIndex]?.images[imageIndex]?.src];
     const slider = this.sliderElement();
     if (!naturalSize || !slider) return 0;
 
@@ -552,16 +549,15 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   }
 
   private scheduleParallax(): void {
-    if (this.scheduled) return;
-    this.scheduled = true;
-
-    requestAnimationFrame(() => {
-      this.scheduled = false;
+    if (this.parallaxFrame) return;
+    this.parallaxFrame = requestAnimationFrame(() => {
+      this.parallaxFrame = 0;
       const slider = this.sliderElement();
       if (!slider) return;
-
       const viewportHeight = window.innerHeight || 1;
       const rect = slider.getBoundingClientRect();
+      // Preserve the effect while avoiding offscreen style writes.
+      if (rect.bottom < 0 || rect.top > viewportHeight) return;
       const progress = (rect.top + rect.height / 2 - viewportHeight / 2) / viewportHeight;
       slider.style.transform = `translateY(${progress * -18}px)`;
     });
