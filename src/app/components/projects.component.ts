@@ -219,10 +219,10 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                           }
                         </div>
 
-                        <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex flex-col items-stretch gap-3">
                           <button
                             type="button"
-                            class="case-study-link group/case inline-flex min-h-11 cursor-pointer items-center gap-4 border border-accent/60 px-5 font-mono text-[9px] uppercase tracking-[0.2em] text-paper transition-colors duration-300 hover:bg-accent hover:text-ink"
+                            class="case-study-link group/case inline-flex min-h-12 cursor-pointer items-center justify-between gap-4 border border-accent/60 px-5 font-mono text-[11px] uppercase tracking-[0.15em] text-paper transition-colors duration-300 hover:bg-accent hover:text-ink"
                             (click)="openCase.emit(project)"
                             data-cursor="View"
                           >
@@ -234,10 +234,11 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                               [href]="project.url"
                               target="_blank"
                               rel="noopener"
-                              [attr.aria-label]="'Visit ' + project.title + ' live site'"
-                              class="inline-flex min-h-11 cursor-pointer items-center px-3 font-mono text-[9px] uppercase tracking-[0.18em] text-paper/45 transition-colors duration-300 hover:text-accent"
+                              [attr.aria-label]="'Visit ' + project.title + ' live site (opens in a new tab)'"
+                              class="live-site-link inline-flex min-h-12 cursor-pointer items-center justify-between gap-4 border border-paper bg-paper px-5 font-mono text-[11px] uppercase tracking-[0.15em] text-ink transition-colors duration-300 hover:border-accent hover:bg-accent active:bg-paper/80"
                             >
-                              Live site ↗
+                              Visit live site
+                              <span aria-hidden="true">↗</span>
                             </a>
                           }
                         </div>
@@ -249,7 +250,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
 
               <button
                 type="button"
-                class="next-project group absolute bottom-8 right-5 hidden cursor-pointer items-center gap-3 font-mono text-[8px] uppercase tracking-[0.18em] text-paper/30 transition-colors hover:text-paper lg:flex"
+                class="next-project group hidden min-h-16 w-full cursor-pointer items-center justify-end gap-3 border-t border-paper/10 px-5 font-mono text-[9px] uppercase tracking-[0.18em] text-paper/60 transition-colors hover:text-paper lg:flex lg:px-10"
                 (click)="selectNextProject()"
               >
                 Next project
