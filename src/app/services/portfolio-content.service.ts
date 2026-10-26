@@ -19,7 +19,10 @@ export class PortfolioContentService {
     this.loading.set(true);
     this.error.set(null);
 
-    const { data, error } = await this.supabase.client.rpc('get_public_portfolio');
+    let response;
+    try { response = await this.supabase.client.rpc('get_public_portfolio').abortSignal(AbortSignal.timeout(10000)); }
+    catch { this.error.set('Published content is unavailable.'); this.source.set('fallback'); this.loading.set(false); return; }
+    const { data, error } = response;
 
     if (error || !data) {
       this.source.set('fallback');

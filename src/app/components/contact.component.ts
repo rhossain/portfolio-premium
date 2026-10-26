@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RevealDirective } from '../directives/reveal.directive';
 import { MagneticDirective } from '../directives/magnetic.directive';
 import { PortfolioContentService } from '../services/portfolio-content.service';
@@ -12,7 +12,7 @@ import { ScrollService } from '../services/scroll.service';
   template: `
     <footer id="contact" class="bg-cream text-creamtext">
       <div class="mx-auto max-w-[1400px] px-6 pb-10 pt-28 md:px-10 md:pt-40">
-        <p appReveal class="font-mono text-[11px] uppercase tracking-[0.3em] text-creamtext/50">
+        <p appReveal class="font-mono text-[12px] uppercase tracking-[0.1em] text-creamtext/70">
           05 — Contact
         </p>
 
@@ -22,7 +22,7 @@ import { ScrollService } from '../services/scroll.service';
           class="mt-10 max-w-5xl font-display text-[2.6rem] font-light leading-[1.05] md:text-[5.2rem]"
         >
           Let's build something<br />
-          <span class="text-accent">worth using</span><span class="text-outline-dark"> — together.</span>
+          <span class="text-accent">worth using</span><span class="contact-together"> — together.</span>
         </h2>
 
         <div class="mt-16 flex flex-wrap items-baseline gap-x-12 gap-y-4 md:mt-24" appReveal [revealDelay]="250">
@@ -40,6 +40,7 @@ import { ScrollService } from '../services/scroll.service';
           >
         </div>
 
+        <div class="contact-actions" appReveal><a class="portfolio-button primary" [href]="'mailto:' + profile.email">Email me ↗</a><button class="portfolio-button" type="button" (click)="copyEmail()">Copy email</button><p class="copy-feedback" role="status">{{ copyStatus() }}</p></div>
         <div
           appReveal
           [revealDelay]="350"
@@ -52,7 +53,7 @@ import { ScrollService } from '../services/scroll.service';
                   [href]="s.url"
                   target="_blank"
                   rel="noopener"
-                  class="invert-link px-1 font-mono text-[11px] uppercase tracking-[0.2em] text-creamtext/70"
+                  class="invert-link px-1 font-mono text-[12px] uppercase tracking-[0.1em] text-creamtext/70"
                   >{{ s.label }} ↗</a
                 >
               </li>
@@ -61,13 +62,13 @@ import { ScrollService } from '../services/scroll.service';
 
           <button
             (click)="toTop()"
-            class="invert-link px-1 font-mono text-[11px] uppercase tracking-[0.2em] text-creamtext/70"
+            class="invert-link px-1 font-mono text-[12px] uppercase tracking-[0.1em] text-creamtext/70"
           >
             Back to top ↑
           </button>
         </div>
 
-        <div class="mt-8 flex items-center justify-between pb-2 font-mono text-[10px] uppercase tracking-[0.25em] text-creamtext/40">
+        <div class="mt-8 flex items-center justify-between pb-2 font-mono text-[12px] uppercase tracking-[0.1em] text-creamtext/70">
           <span>© 2026 {{ profile.name }}</span>
           <span>{{ profile.location }}</span>
         </div>
@@ -78,7 +79,13 @@ import { ScrollService } from '../services/scroll.service';
 export class ContactComponent {
   private readonly content = inject(PortfolioContentService);
   get profile() { return this.content.content().profile; }
-  get socials() { return this.content.content().socials; }
+  get socials() { return [...this.content.content().socials].sort((a, b) => this.socialRank(a.label) - this.socialRank(b.label)); }
+  private socialRank(label: string): number { return /linkedin/i.test(label) ? 0 : /github|gitlab/i.test(label) ? 1 : 2; }
+  readonly copyStatus = signal('');
+  async copyEmail(): Promise<void> {
+    try { await navigator.clipboard.writeText(this.profile.email); this.copyStatus.set('Email copied.'); }
+    catch { this.copyStatus.set('Select the email address above and copy it manually.'); }
+  }
   get telHref() { return 'tel:' + this.profile.phone.replace(/\s/g, ''); }
   private readonly scroll = inject(ScrollService);
 

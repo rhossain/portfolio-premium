@@ -13,6 +13,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { ImageViewerComponent } from '../shared/image-viewer.component';
 import { Project } from '../content';
 import { RevealDirective } from '../directives/reveal.directive';
 import { PortfolioContentService } from '../services/portfolio-content.service';
@@ -20,16 +21,16 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [RevealDirective],
+  imports: [RevealDirective, ImageViewerComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <section id="work" class="work-section relative overflow-hidden py-28 md:py-40">
+    <section id="work" tabindex="-1" class="work-section relative overflow-hidden py-20 md:py-28">
       <div class="work-watermark" aria-hidden="true">Selected work</div>
 
       <div class="relative mx-auto max-w-[1400px] px-6 md:px-10">
         <header class="grid gap-10 md:grid-cols-12 md:items-end" appReveal>
           <div class="md:col-span-3">
-            <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-paper/40">03 — Selected Work</p>
+            <p class="font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70">01 — Selected Work</p>
             <span class="mt-4 block h-px w-16 bg-paper/25"></span>
           </div>
 
@@ -40,7 +41,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
             </h2>
           </div>
 
-          <p class="max-w-xs text-sm leading-relaxed text-paper/42 md:col-span-3 md:justify-self-end">
+          <p class="max-w-xs text-base leading-relaxed text-paper/70 md:col-span-3 md:justify-self-end">
             A curated view of product systems, commerce and digital platforms — engineered across screens and stacks.
           </p>
         </header>
@@ -49,8 +50,8 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
           <div class="work-viewer mt-16 border-y border-paper/10 md:mt-24 md:grid md:grid-cols-12" appReveal>
             <nav class="project-index md:col-span-4 lg:col-span-3" aria-label="Select a project">
               <div class="hidden min-h-20 items-center justify-between border-b border-paper/10 pr-7 md:flex">
-                <span class="font-mono text-[9px] uppercase tracking-[0.22em] text-paper/32">Project index</span>
-                <span class="font-mono text-[9px] tabular-nums tracking-[0.18em] text-paper/30">
+                <span class="font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70">Project index</span>
+                <span class="font-mono text-[12px] tabular-nums tracking-[0.1em] text-paper/70">
                   {{ paddedProject(activeProjectIndex() + 1) }} / {{ paddedProject(projects.length) }}
                 </span>
               </div>
@@ -65,14 +66,14 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                     (click)="selectProject(pi)"
                     data-cursor="View"
                   >
-                    <span class="picker-index font-mono text-[9px] tabular-nums tracking-[0.18em] text-paper/28">
+                    <span class="picker-index font-mono text-[12px] tabular-nums tracking-[0.1em] text-paper/70">
                       {{ project.index }}
                     </span>
                     <span>
-                      <span class="picker-title block font-display text-xl font-light leading-none text-paper/55 transition-colors duration-300 group-hover:text-paper md:text-[1.35rem]">
+                      <span class="picker-title block font-display text-xl font-light leading-none text-paper/70 transition-colors duration-300 group-hover:text-paper md:text-[1.35rem]">
                         {{ project.title }}
                       </span>
-                      <span class="mt-2 block font-mono text-[8px] uppercase tracking-[0.17em] text-paper/28">
+                      <span class="mt-2 block font-mono text-[12px] uppercase tracking-[0.17em] text-paper/70">
                         {{ project.category }} · {{ project.year }}
                       </span>
                     </span>
@@ -83,7 +84,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
 
               <div class="hidden items-center gap-3 py-7 pr-7 md:flex">
                 <span class="h-px flex-1 bg-paper/10"></span>
-                <span class="font-mono text-[8px] uppercase tracking-[0.17em] text-paper/25">Choose a project</span>
+                <span class="font-mono text-[12px] uppercase tracking-[0.17em] text-paper/70">Choose a project</span>
               </div>
             </nav>
 
@@ -99,10 +100,9 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                       (pointerdown)="onDragStart($event, pi)"
                       (pointermove)="onDragMove($event, pi)"
                       (pointerup)="onDragEnd($event, pi, project)"
-                      (pointercancel)="onDragEnd($event, pi, project)"
+                      (pointercancel)="cancelDrag(pi)"
                       (pointerleave)="onDragLeave($event, pi, project)"
-                      (mouseenter)="onHoverStart(pi)"
-                      (mouseleave)="onHoverEnd(pi)"
+
                       data-cursor="Drag"
                     >
                       <div
@@ -120,7 +120,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                         [class.no-anim]="dragging() === pi"
                       >
                         @for (image of project.images; track image.src; let ii = $index) {
-                          <div class="relative h-full w-full shrink-0 select-none overflow-hidden">
+                          <div class="relative h-full w-full shrink-0 select-none overflow-hidden" [attr.aria-hidden]="slide(pi) !== ii" [attr.inert]="slide(pi) !== ii ? '' : null">
                             <div
                               class="slider-pan absolute left-0 top-0 w-full"
                               [style.height]="panHeight(pi, ii)"
@@ -136,21 +136,26 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                                 decoding="async"
                                 draggable="false"
                                 (load)="onImageLoad($event, image.src)"
+                                (error)="markImageFailed(image.src)"
                               />
+                              @if (!imageLoaded(image.src) && !failedImages().has(image.src)) { <p class="media-loading" role="status">Loading screen…</p> }
+                              @if (failedImages().has(image.src)) {
+                                <div class="media-fallback" role="status"><p>This screen could not be loaded.</p><button class="admin-secondary" type="button" (click)="retryImage($event, image.src)">Try again</button></div>
+                              }
                             </div>
                           </div>
                         }
                       </div>
 
-                      <div class="pointer-events-none absolute inset-0 bg-linear-to-t from-ink/75 via-transparent to-ink/20"></div>
+                      <div class="pointer-events-none absolute inset-0 project-image-shade"></div>
                       <div class="pointer-events-none absolute inset-0 border border-paper/8"></div>
 
                       <div class="absolute left-5 top-5 flex items-center gap-3 md:left-7 md:top-7">
-                        <span class="rounded-full border border-paper/15 bg-ink/55 px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-paper/60 backdrop-blur-md">
+                        <span class="rounded-full border border-paper/15 bg-ink/55 px-3 py-1.5 font-mono text-[12px] uppercase tracking-[0.1em] text-paper/60 backdrop-blur-md">
                           Screen {{ slide(pi) + 1 }} of {{ project.images.length }}
                         </span>
-                        <span class="tour-label hidden font-mono text-[8px] uppercase tracking-[0.16em] text-paper/38 sm:block">
-                          Hover to tour
+                        <span class="tour-label hidden font-mono text-[12px] uppercase tracking-[0.16em] text-paper/70 sm:block">
+                          Screen preview
                         </span>
                       </div>
 
@@ -199,30 +204,43 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                       </div>
                     </div>
 
+                    @if (project.images.length) {
+                      <div class="screen-toolbar">
+                        <div class="screen-thumbnails" role="group" aria-label="Choose a project screen">
+                          @for (image of project.images; track image.src; let ii = $index) {
+                            <button type="button" [attr.aria-label]="'Preview screen ' + (ii + 1)" [attr.aria-pressed]="slide(pi) === ii" (click)="goTo(pi, ii)"><img [src]="image.src" alt="" loading="lazy" /><span>{{ ii + 1 }}</span></button>
+                          }
+                        </div>
+                        <button class="screen-open" type="button" (click)="viewerIndex.set(slide(pi))">View full screen ↗</button>
+                        <button class="screen-tour" type="button" [attr.aria-pressed]="hovering() === pi" (click)="toggleTour(pi)">{{ hovering() === pi ? 'Stop tour' : 'Tour screen' }}</button>
+                      </div>
+                    } @else { <p class="media-fallback">Project screens are being prepared.</p> }
                     <div class="project-copy grid gap-8 border-t border-paper/10 px-5 py-8 md:grid-cols-12 md:px-8 md:py-10 lg:px-10">
                       <div class="md:col-span-7">
-                        <p class="font-mono text-[9px] uppercase tracking-[0.22em] text-accent">
+                        <p class="font-mono text-[12px] uppercase tracking-[0.1em] text-accent">
                           {{ project.category }} — {{ project.year }}
                         </p>
                         <h3 class="mt-3 font-display text-4xl font-light leading-none text-paper md:text-5xl">
                           {{ project.title }}<span class="text-accent">.</span>
                         </h3>
-                        <p class="mt-5 max-w-xl text-sm leading-[1.8] text-paper/48">{{ project.description }}</p>
+                        <p class="mt-5 max-w-xl text-sm leading-[1.8] text-paper/70">{{ project.description }}</p>
                       </div>
 
                       <div class="flex flex-col justify-between gap-8 md:col-span-5 md:border-l md:border-paper/10 md:pl-8">
                         <div class="flex flex-wrap gap-x-5 gap-y-3">
                           @for (technology of project.stack; track technology) {
-                            <span class="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.15em] text-paper/42">
+                            <span class="flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.15em] text-paper/70">
                               <span class="text-accent" aria-hidden="true">+</span>{{ technology }}
                             </span>
                           }
                         </div>
 
+                        <p class="project-contribution"><span class="eyebrow">My contribution</span>{{ project.caseStudy.role }}</p>
+                        @if (project.caseStudy.result) { <p class="project-contribution"><span class="eyebrow">Result</span>{{ project.caseStudy.result }}</p> }
                         <div class="flex flex-col items-stretch gap-3">
                           <button
                             type="button"
-                            class="case-study-link group/case inline-flex min-h-12 cursor-pointer items-center justify-between gap-4 border border-accent/60 px-5 font-mono text-[11px] uppercase tracking-[0.15em] text-paper transition-colors duration-300 hover:bg-accent hover:text-ink"
+                            class="case-study-link primary-project-action group/case inline-flex min-h-12 cursor-pointer items-center justify-between gap-4 border border-accent/60 px-5 font-mono text-[12px] uppercase tracking-[0.15em] text-paper transition-colors duration-300 hover:bg-accent hover:text-ink"
                             (click)="openCase.emit(project)"
                             data-cursor="View"
                           >
@@ -235,7 +253,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                               target="_blank"
                               rel="noopener"
                               [attr.aria-label]="'Visit ' + project.title + ' live site (opens in a new tab)'"
-                              class="live-site-link inline-flex min-h-12 cursor-pointer items-center justify-between gap-4 border border-paper bg-paper px-5 font-mono text-[11px] uppercase tracking-[0.15em] text-ink transition-colors duration-300 hover:border-accent hover:bg-accent active:bg-paper/80"
+                              class="live-site-link secondary-project-action inline-flex min-h-12 cursor-pointer items-center justify-between gap-4 border border-paper bg-paper px-5 font-mono text-[12px] uppercase tracking-[0.15em] text-ink transition-colors duration-300 hover:border-accent hover:bg-accent active:bg-paper/80"
                             >
                               Visit live site
                               <span aria-hidden="true">↗</span>
@@ -250,7 +268,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
 
               <button
                 type="button"
-                class="next-project group hidden min-h-16 w-full cursor-pointer items-center justify-end gap-3 border-t border-paper/10 px-5 font-mono text-[9px] uppercase tracking-[0.18em] text-paper/60 transition-colors hover:text-paper lg:flex lg:px-10"
+                class="next-project group hidden min-h-16 w-full cursor-pointer items-center justify-end gap-3 border-t border-paper/10 px-5 font-mono text-[12px] uppercase tracking-[0.1em] text-paper/60 transition-colors hover:text-paper lg:flex lg:px-10"
                 (click)="selectNextProject()"
               >
                 Next project
@@ -261,11 +279,14 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
         } @else {
           <div class="mt-16 border-y border-paper/10 py-20 text-center md:mt-24">
             <p class="font-display text-2xl font-light text-paper/65">Selected work is being prepared.</p>
-            <p class="mt-3 text-sm text-paper/35">Please check back soon.</p>
+            <p class="mt-3 text-sm text-paper/70">Please check back soon.</p>
           </div>
         }
       </div>
     </section>
+    @if (viewerIndex() !== null && projects[activeProjectIndex()]; as project) {
+      <app-image-viewer [images]="project.images" [initialIndex]="viewerIndex()!" (closed)="viewerIndex.set(null)" />
+    }
   `,
   styles: [
     `
@@ -394,6 +415,19 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   readonly activeProjectIndex = signal(0);
   readonly dragging = signal(-1);
   readonly hovering = signal(-1);
+  readonly viewerIndex = signal<number | null>(null);
+  readonly failedImages = signal(new Set<string>());
+  imageLoaded(src: string): boolean { return !!this.naturalSize[src]; }
+  markImageFailed(src: string): void { this.failedImages.update(previous => new Set([...previous, src])); }
+  retryImage(event: Event, src: string): void {
+    const image = (event.target as HTMLElement).closest('.slider-pan')?.querySelector('img');
+    this.failedImages.update(previous => { const next = new Set(previous); next.delete(src); return next; });
+    if (image) image.src = src;
+  }
+  toggleTour(index: number): void {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this.hovering.set(this.hovering() === index ? -1 : index);
+  }
 
   private readonly slides: Record<number, number> = {};
   private readonly dragOffset: Record<number, number> = {};
@@ -433,6 +467,11 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     this.dragging.set(-1);
     this.hovering.set(-1);
     this.activeProjectIndex.set(index);
+    requestAnimationFrame(() => {
+      const selected = this.host.nativeElement.querySelector('.project-picker.is-active') as HTMLElement | null;
+      const list = selected?.parentElement;
+      if (selected && list && window.innerWidth < 768) list.scrollTo({ left: selected.offsetLeft - list.offsetLeft, behavior: 'instant' });
+    });
     if (this.parallaxEnabled) this.zone.runOutsideAngular(() => this.scheduleParallax());
   }
 
@@ -478,7 +517,7 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   }
 
   panTransform(projectIndex: number, imageIndex: number): string {
-    if (this.hovering() !== projectIndex || this.slide(projectIndex) !== imageIndex) return 'translateY(0px)';
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || this.hovering() !== projectIndex || this.slide(projectIndex) !== imageIndex) return 'translateY(0px)';
 
     const extra = this.tourExtra(projectIndex, imageIndex);
     return extra > 40 ? `translateY(${(-extra).toFixed(1)}px)` : 'translateY(0px)';
@@ -491,11 +530,12 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
   }
 
   goTo(projectIndex: number, imageIndex: number): void {
+    this.hovering.set(-1);
     this.slides[projectIndex] = imageIndex;
   }
 
   onDragStart(event: PointerEvent, projectIndex: number): void {
-    if ((event.target as HTMLElement).closest('button')) return;
+    if (event.button !== 0 || (event.target as HTMLElement).closest('button')) return;
 
     this.dragging.set(projectIndex);
     this.dragStartX = event.clientX;
@@ -521,6 +561,13 @@ export class ProjectsComponent implements AfterViewInit, OnDestroy {
     const threshold = Math.min((event.currentTarget as HTMLElement).clientWidth * 0.14, 90);
     if (delta < -threshold) this.step(projectIndex, 1, project);
     if (delta > threshold) this.step(projectIndex, -1, project);
+  }
+
+  cancelDrag(projectIndex: number): void {
+    if (this.dragging() !== projectIndex) return;
+    this.dragging.set(-1);
+    this.dragStartOffset = 0;
+    this.dragOffset[projectIndex] = 0;
   }
 
   onDragLeave(event: PointerEvent, projectIndex: number, project: Project): void {

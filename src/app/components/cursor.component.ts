@@ -35,9 +35,9 @@ export class CursorComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    if (!window.matchMedia('(pointer: fine)').matches) return;
+    if (!window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    document.body.classList.add('cursor-active');
+    // Keep the native pointer for clear link and button affordances.
 
     const dotToX = gsap.quickTo(this.dot.nativeElement, 'x', { duration: 0.12, ease: 'power2.out' });
     const dotToY = gsap.quickTo(this.dot.nativeElement, 'y', { duration: 0.12, ease: 'power2.out' });
@@ -46,6 +46,8 @@ export class CursorComponent implements AfterViewInit, OnDestroy {
 
     this.zone.runOutsideAngular(() => {
       this.moveListener = (e: MouseEvent) => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        this.ring.nativeElement.classList.add('has-pointer');
         dotToX(e.clientX - 3);
         dotToY(e.clientY - 3);
         ringToX(e.clientX - this.ring.nativeElement.offsetWidth / 2);

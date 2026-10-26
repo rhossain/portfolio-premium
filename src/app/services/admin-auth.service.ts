@@ -63,10 +63,13 @@ export class AdminAuthService {
   }
 
   async signOut(): Promise<void> {
+    // Run the editor's navigation guard before revoking the session.
+    const wasAdmin = this.isAdmin();
+    this.isAdmin.set(false);
+    const left = await this.router.navigateByUrl('/admin/login');
+    if (!left) { this.isAdmin.set(wasAdmin); return; }
     await this.supabase.client.auth.signOut();
     this.session.set(null);
-    this.isAdmin.set(false);
-    await this.router.navigateByUrl('/admin/login');
   }
 
   async refreshAdminStatus(): Promise<boolean> {

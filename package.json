@@ -13,7 +13,8 @@
     "deploy:frontend": "bash scripts/deploy-hostinger.sh --skip-supabase",
     "rollback": "bash scripts/rollback-hostinger.sh",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:content": "node --test scripts/prepare-project-draft.test.mjs"
   },
   "private": true,
   "dependencies": {

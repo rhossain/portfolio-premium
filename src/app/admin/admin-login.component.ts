@@ -17,29 +17,30 @@ import { AdminAuthService, PORTFOLIO_ADMIN_EMAIL } from '../services/admin-auth.
         <h1 id="login-title" class="admin-login-title">Welcome back.</h1>
         <p class="admin-login-copy">Sign in with your authorized administrator account.</p>
 
-        <form class="mt-12 space-y-6" (ngSubmit)="submit()">
+        <form novalidate class="mt-12 space-y-6" (ngSubmit)="submit()">
           <label class="admin-field">
             <span>Administrator email</span>
             <input name="email" type="email" autocomplete="email" required readonly [(ngModel)]="email" />
           </label>
-          <label class="admin-field">
-            <span>Password</span>
-            <input name="password" type="password" autocomplete="current-password" required [(ngModel)]="password" />
-          </label>
+          <div class="admin-field">
+            <label for="login-password">Password</label>
+            <div class="password-input"><input id="login-password" name="password" [type]="showPassword() ? 'text' : 'password'" autocomplete="current-password" required [(ngModel)]="password" [attr.aria-invalid]="!!error()" [attr.aria-describedby]="error() ? 'login-error' : null" />
+              <button type="button" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'" [attr.aria-pressed]="showPassword()">{{ showPassword() ? 'Hide' : 'Show' }}</button></div>
+          </div>
 
           @if (error()) {
-            <p class="admin-error" role="alert">{{ error() }}</p>
+            <p id="login-error" class="admin-error" role="alert">{{ error() }}</p>
           }
           @if (notice()) {
             <p class="admin-notice" role="status">{{ notice() }}</p>
           }
 
           <button class="admin-primary w-full" type="submit" [disabled]="submitting()">
-            {{ submitting() ? 'Signing in…' : 'Sign in' }}
+            {{ pendingAction() === 'password' ? 'Signing in…' : 'Sign in' }}
           </button>
           <div class="admin-login-divider"><span>or</span></div>
           <button class="admin-secondary w-full" type="button" (click)="sendMagicLink()" [disabled]="submitting()">
-            Email me a sign-in link
+            {{ pendingAction() === 'link' ? 'Sending sign-in link…' : 'Email me a sign-in link' }}
           </button>
         </form>
       </section>
@@ -49,6 +50,8 @@ import { AdminAuthService, PORTFOLIO_ADMIN_EMAIL } from '../services/admin-auth.
 export class AdminLoginComponent implements OnInit {
   email = PORTFOLIO_ADMIN_EMAIL;
   password = '';
+  readonly showPassword = signal(false);
+  readonly pendingAction = signal<'password' | 'link' | null>(null);
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
   readonly notice = signal<string | null>(null);
@@ -60,12 +63,15 @@ export class AdminLoginComponent implements OnInit {
   }
 
   async submit(): Promise<void> {
-    if (!this.email || !this.password || this.submitting()) return;
+    if (this.submitting()) return;
+    if (!this.password) { this.error.set('Enter your password or request a sign-in link.'); document.getElementById('login-password')?.focus(); return; }
     this.submitting.set(true);
+    this.pendingAction.set('password');
     this.error.set(null);
     this.notice.set(null);
-    const error = await this.auth.signIn(this.email.trim(), this.password);
-    this.submitting.set(false);
+    let error: string | null;
+    try { error = await this.auth.signIn(this.email.trim(), this.password); } catch { error = 'Unable to sign in. Check your connection and try again.'; }
+    this.submitting.set(false); this.pendingAction.set(null);
     if (error) {
       this.error.set(error);
       return;
@@ -75,11 +81,12 @@ export class AdminLoginComponent implements OnInit {
 
   async sendMagicLink(): Promise<void> {
     if (!this.email || this.submitting()) return;
-    this.submitting.set(true);
+    this.submitting.set(true); this.pendingAction.set('link');
     this.error.set(null);
     this.notice.set(null);
-    const error = await this.auth.sendMagicLink(this.email.trim());
-    this.submitting.set(false);
+    let error: string | null;
+    try { error = await this.auth.sendMagicLink(this.email.trim()); } catch { error = 'Unable to send the link. Check your connection and try again.'; }
+    this.submitting.set(false); this.pendingAction.set(null);
     if (error) {
       this.error.set(error);
       return;

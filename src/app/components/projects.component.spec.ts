@@ -67,6 +67,31 @@ describe('ProjectsComponent', () => {
     otherFixture.destroy();
   });
 
+  it('resets a cancelled touch gesture without changing the screenshot', () => {
+    const slider = fixture.nativeElement.querySelector('.slider') as HTMLElement;
+    spyOn(slider, 'setPointerCapture');
+    slider.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, clientX: 250, button: 0 }));
+    slider.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientX: 50 }));
+    expect(fixture.componentInstance.dragging()).toBe(0);
+    slider.dispatchEvent(new PointerEvent('pointercancel', { pointerId: 1 }));
+    expect(fixture.componentInstance.dragging()).toBe(-1);
+    expect(fixture.componentInstance.slide(0)).toBe(0);
+
+    // A later intentional swipe still works after the browser cancels scrolling.
+    slider.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 2, clientX: 250, button: 0 }));
+    slider.dispatchEvent(new PointerEvent('pointermove', { pointerId: 2, clientX: 50 }));
+    slider.dispatchEvent(new PointerEvent('pointerup', { pointerId: 2, clientX: 50 }));
+    expect(fixture.componentInstance.slide(0)).toBe(1);
+  });
+
+  it('ignores secondary mouse buttons on the screenshot slider', () => {
+    const slider = fixture.nativeElement.querySelector('.slider') as HTMLElement;
+    const capture = spyOn(slider, 'setPointerCapture');
+    slider.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, clientX: 250, button: 2 }));
+    expect(capture).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.dragging()).toBe(-1);
+  });
+
   it('uses the loaded screenshot dimensions to preserve its full-page tour', () => {
     const host = fixture.nativeElement as HTMLElement;
     const slider = host.querySelector('.slider') as HTMLElement;

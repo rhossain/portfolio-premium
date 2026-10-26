@@ -50,6 +50,17 @@ The Angular app contains only the project URL and publishable key. Never add a s
 - The CMS can export/import a portable JSON draft. Export before a major content restructure. Database backups and Storage backups should also be enabled in Supabase as the site grows.
 - Do not overwrite an image at the same path. Upload a new immutable file, publish the new reference, and remove the old object only after confirming it is unused.
 
+## Prepare authored case-study copy
+
+Export a fresh draft from CMS Settings, then merge an authored project into a separate file:
+
+```bash
+node scripts/prepare-project-draft.mjs "ngCommerce" /absolute/path/current-draft.json /absolute/path/new-draft.json
+npm run test:content
+```
+
+The helper supports projects with a complete authored problem, decisions and result, currently Styloviz, ngCommerce, Nop Kalles and Fortune. It preserves unrelated edits and media, refuses to overwrite an existing file, and makes no network requests. Import the result in Settings and review **Preview draft** before saving or publishing. Source notes and application details live in `artifacts/styloviz-case-study/README.md` and `artifacts/ngcommerce-case-study/README.md`, with further source notes in `artifacts/nop-kalles-case-study/README.md` and `artifacts/fortune-case-study/README.md`. The earlier `prepare-styloviz-draft.mjs` command remains available.
+
 ## Main admin areas
 
 - Profile and About

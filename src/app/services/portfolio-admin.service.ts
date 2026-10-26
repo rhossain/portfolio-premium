@@ -12,6 +12,8 @@ export interface PortfolioDocument {
 
 @Injectable({ providedIn: 'root' })
 export class PortfolioAdminService {
+  private draftUpdatedAt: string | null = null;
+  get lastSavedAt(): string | null { return this.draftUpdatedAt; }
   constructor(private readonly supabase: SupabaseService) {}
 
   async getDocument(): Promise<PortfolioDocument> {
@@ -23,6 +25,7 @@ export class PortfolioAdminService {
 
     if (error) throw error;
 
+    this.draftUpdatedAt = data['updated_at'] as string;
     return {
       draft: data['draft_content'] as PortfolioContent,
       published: data['published_content'] as PortfolioContent,
@@ -33,12 +36,17 @@ export class PortfolioAdminService {
   }
 
   async saveDraft(content: PortfolioContent): Promise<void> {
-    const { error } = await this.supabase.client
+    if (!this.draftUpdatedAt) throw new Error('Reload the editor before saving. Your edits have been retained.');
+    const { data, error } = await this.supabase.client
       .from('portfolio_documents')
       .update({ draft_content: content })
-      .eq('document_key', 'main');
-
+      .eq('document_key', 'main')
+      .eq('updated_at', this.draftUpdatedAt)
+      .select('updated_at')
+      .single();
+    if (error?.code === 'PGRST116') throw new Error('The server draft changed in another tab. Export your edits, then reload the editor before saving.');
     if (error) throw error;
+    this.draftUpdatedAt = data['updated_at'] as string;
   }
 
   async publish(): Promise<PortfolioContent> {
@@ -69,13 +77,8 @@ export class PortfolioAdminService {
     return { src: data.publicUrl, alt, storagePath: path };
   }
 
-  async removeImage(asset: MediaAsset): Promise<void> {
-    if (!asset.storagePath) return;
-    const { error } = await this.supabase.client.storage
-      .from('portfolio-media')
-      .remove([asset.storagePath]);
-    if (error) throw error;
-  }
+  // Media removal is draft-only. Permanent deletion requires a server-side
+  // reference check across published content and retained revisions.
 
   exportJson(content: PortfolioContent): void {
     const blob = new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' });

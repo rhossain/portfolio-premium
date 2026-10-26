@@ -12,20 +12,20 @@ import { PortfolioAdminService, PortfolioDocument } from '../services/portfolio-
   template: `
     <main class="admin-page">
       @if (loading()) {
-        <div class="admin-loading">Loading portfolio content…</div>
+        <div class="admin-loading" role="status">Loading portfolio content…</div>
       } @else if (error()) {
         <div class="admin-empty">
           <h1>Unable to load the dashboard.</h1>
-          <p>{{ error() }}</p>
+          <p role="alert">{{ error() }}</p>
           <button class="admin-secondary" type="button" (click)="load()">Try again</button>
         </div>
       } @else if (document(); as doc) {
         <header class="admin-page-header">
           <div>
-            <h1>Good morning, Sazzad</h1>
+            <h1>Welcome back, Sazzad</h1>
             <p>{{ isPublished(doc) ? 'Everything is published and up to date.' : 'You have unpublished draft changes.' }}</p>
           </div>
-          <a routerLink="/admin/content/projects" class="admin-primary">Add project</a>
+          <a routerLink="/admin/content/projects" class="admin-primary">Manage projects</a>
         </header>
 
         <section class="admin-stat-strip" aria-label="Portfolio summary">
@@ -41,15 +41,15 @@ import { PortfolioAdminService, PortfolioDocument } from '../services/portfolio-
           </div>
           <div class="admin-table" role="table" aria-label="Editable content">
             <div class="admin-table-head" role="row">
-              <span>Title</span><span>Section</span><span>Status</span><span>Updated</span><span></span>
+              <span role="columnheader">Title</span><span role="columnheader">Section</span><span role="columnheader">Status</span><span role="columnheader">Updated</span><span role="columnheader">Actions</span>
             </div>
             @for (row of rows(doc); track row.path) {
               <div class="admin-table-row" role="row">
-                <strong>{{ row.title }}</strong>
-                <span>{{ row.section }}</span>
-                <span class="admin-status"><i></i>{{ row.status }}</span>
-                <time>{{ doc.updatedAt | date:'mediumDate' }}</time>
-                <a [routerLink]="row.path" class="admin-row-action">Edit</a>
+                <strong role="rowheader">{{ row.title }}</strong>
+                <span class="admin-table-section" role="cell">{{ row.section }}</span>
+                <span class="admin-status" role="cell"><i aria-hidden="true"></i>{{ row.status }}</span>
+                <time role="cell">{{ doc.updatedAt | date:'mediumDate' }}</time>
+                <span class="admin-table-actions" role="cell"><a [routerLink]="row.path" class="admin-row-action" [attr.aria-label]="'Edit ' + row.section">Edit</a></span>
               </div>
             }
           </div>
@@ -72,7 +72,7 @@ export class AdminDashboardComponent implements OnInit {
     try {
       this.document.set(await this.admin.getDocument());
     } catch (error) {
-      this.error.set(error instanceof Error ? error.message : 'Unexpected error');
+      this.error.set(error && typeof error === 'object' && 'message' in error ? String(error.message) : 'Unable to load content. Check your connection and try again.');
     } finally {
       this.loading.set(false);
     }

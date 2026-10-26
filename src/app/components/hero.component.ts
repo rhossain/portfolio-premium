@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { gsap } from 'gsap';
 import Matter from 'matter-js';
+import { ScrollService } from '../services/scroll.service';
 import { PortfolioContentService } from '../services/portfolio-content.service';
 
 interface MeasuredLetter {
@@ -31,7 +32,7 @@ interface MeasuredLetter {
     <section
       id="top"
       #heroEl
-      class="relative flex min-h-screen flex-col justify-between overflow-hidden px-6 pb-10 pt-28 md:px-10"
+      tabindex="-1" class="hero-section relative flex flex-col justify-between overflow-hidden px-6 pb-10 pt-28 md:px-10"
     >
       <!-- ambient layers -->
       <div class="hero-orb hero-orb-a"></div>
@@ -58,14 +59,14 @@ interface MeasuredLetter {
       </div>
 
       <!-- top meta row -->
-      <div class="relative z-20 flex items-start justify-between font-mono text-[11px] uppercase tracking-[0.2em] text-paper/50">
+      <div class="relative z-20 flex items-start justify-between font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70">
         <p [class.opacity-0]="!active">
           {{ profile.role }}<br />
-          <span class="text-paper/30">{{ profile.years }} years of craft</span>
+          <span class="text-paper/70">{{ profile.years }} years of craft</span>
         </p>
         <p class="text-right" [class.opacity-0]="!active">
           Based in {{ profile.location }}<br />
-          <span class="text-paper/30">Portfolio — 2026</span>
+          <span class="text-paper/70">Portfolio — 2026</span>
         </p>
       </div>
 
@@ -73,7 +74,7 @@ interface MeasuredLetter {
       @if (!physicsOn()) {
         <div
           #cardEl
-          class="portrait-frame absolute right-[7vw] top-[16vh] z-5 hidden w-[21vw] max-w-[330px] lg:block"
+          class="portrait-frame absolute right-[7vw] top-[20vh] z-5 hero-portrait w-[21vw] max-w-[330px]"
           [class.opacity-0]="!active"
           style="transition: opacity 1s ease 0.9s;"
         >
@@ -90,14 +91,18 @@ interface MeasuredLetter {
             <span class="frame-corner right-3 top-3 border-r border-t"></span>
             <span class="frame-corner bottom-3 left-3 border-b border-l"></span>
             <span class="frame-corner bottom-3 right-3 border-b border-r"></span>
-            <p class="absolute bottom-5 left-5 right-5 font-mono text-[10px] uppercase leading-relaxed tracking-[0.25em] text-paper/80">
+            <p class="absolute bottom-5 left-5 right-5 font-mono text-[12px] uppercase leading-relaxed tracking-[0.1em] text-paper/80">
               {{ profile.name }}<br />
-              <span class="text-paper/50">{{ profile.role }} — est. 2009</span>
+              <span class="text-paper/70">{{ profile.role }} — est. 2009</span>
             </p>
           </div>
         </div>
       }
 
+      <div class="hero-intro relative z-20" [class.is-ready]="active">
+        <p class="eyebrow text-accent">{{ profile.role }}</p>
+        <p class="hero-value">Thoughtful interfaces.<br /><em>Dependable engineering.</em></p>
+      </div>
       <!-- the name -->
       <div #nameEl class="relative z-10 select-none">
         @if (!physicsOn()) {
@@ -142,47 +147,14 @@ interface MeasuredLetter {
         }
       </div>
 
-      <!-- bottom row -->
-      <div class="relative z-20 flex items-end justify-between">
-        <p
-          class="max-w-xs text-sm leading-relaxed text-paper/60 transition-opacity duration-700"
-          [class.opacity-0]="!active"
-        >
-          {{ profile.tagline }}
-        </p>
-
-        <div class="flex flex-col items-center gap-3">
-          @if (!physicsOn()) {
-            @if (physicsAvailable()) {
-              <button
-                (click)="startPhysics()"
-                class="u-sweep font-mono text-[11px] uppercase tracking-[0.25em] text-paper/50 transition-colors hover:text-paper"
-                [class.opacity-0]="!active"
-              >
-                Do not press this
-              </button>
-            }
-            <span data-cursor="Scroll" class="font-mono text-[10px] uppercase tracking-[0.3em] text-paper/30">Scroll</span>
-            <span data-cursor="Scroll" class="h-10 w-px overflow-hidden bg-paper/15">
-              <span class="block h-full w-full origin-top animate-[scrolldrip_1.8s_ease-in-out_infinite] bg-paper/70"></span>
-            </span>
-          } @else {
-            <button
-              (click)="resetPhysics()"
-              class="u-sweep font-mono text-[11px] uppercase tracking-[0.25em] text-paper/50 transition-colors hover:text-paper"
-            >
-              Put it back
-            </button>
-            <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-paper/30">Drag the letters</span>
-          }
+      <div class="hero-bottom relative z-20" [class.is-ready]="active">
+        <div class="hero-summary"><p>{{ profile.tagline }}</p>
+          <div class="hero-actions"><a class="portfolio-button primary" href="#work" (click)="scroll.navigate($event, '#work')">View selected work <span aria-hidden="true">↘</span></a><a class="portfolio-button" href="#contact" (click)="scroll.navigate($event, '#contact')">Get in touch <span aria-hidden="true">↗</span></a></div>
         </div>
-
-        <p
-          class="hidden max-w-xs text-right font-mono text-[11px] uppercase leading-relaxed tracking-[0.2em] text-paper/40 transition-opacity duration-700 md:block"
-          [class.opacity-0]="!active"
-        >
-          Interfaces engineered<br />to be felt, not just seen
-        </p>
+        <div class="hero-proof"><span class="eyebrow">{{ profile.years }} years of craft</span><p>{{ currentRole }}</p>
+          @if (!physicsOn() && physicsAvailable()) { <button class="hero-play" type="button" (click)="startPhysics()">Do not press this ↗</button> }
+          @if (physicsOn()) { <button class="hero-play" type="button" (click)="resetPhysics()">Put it back ↶</button> }
+        </div>
       </div>
     </section>
   `,
@@ -207,6 +179,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   @ViewChild('beamB') beamB?: ElementRef<HTMLElement>;
   @ViewChild('cardEl') cardEl?: ElementRef<HTMLElement>;
 
+  readonly scroll = inject(ScrollService);
+  get currentRole() { const job = this.content.content().experience[0]; return job ? job.role + ' · ' + job.company : this.profile.role; }
   private readonly content = inject(PortfolioContentService);
   get profile() { return this.content.content().profile; }
   get firstNameChars() { return this.profile.firstName.split(''); }
@@ -232,7 +206,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    const finePointer = window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.physicsAvailable.set(finePointer && window.innerWidth >= 768);
 
     this.zone.runOutsideAngular(() => {
@@ -252,7 +226,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   }
 
   private onPointer(e: MouseEvent): void {
-    if (!this.inView || this.physicsOn()) return;
+    if (!this.inView || this.physicsOn() || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const nx = e.clientX / window.innerWidth - 0.5;
     const ny = e.clientY / window.innerHeight - 0.5;
     if (this.beamA) {
@@ -282,7 +256,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   }
 
   startPhysics(): void {
-    if (!this.physicsAvailable() || this.physicsOn()) return;
+    if (!this.physicsAvailable() || this.physicsOn() || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const container = this.heroEl.nativeElement;
     const containerRect = container.getBoundingClientRect();

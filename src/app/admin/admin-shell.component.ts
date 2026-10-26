@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AdminAuthService } from '../services/admin-auth.service';
 
@@ -11,12 +11,12 @@ import { AdminAuthService } from '../services/admin-auth.service';
     <div class="admin-root min-h-screen bg-ink text-paper">
       <header class="admin-mobile-header">
         <a routerLink="/admin" aria-label="Portfolio Admin home"><img class="admin-mobile-brand" src="brand-mark.svg" alt="" width="36" height="36" /></a>
-        <button type="button" class="admin-icon-button" (click)="menuOpen.set(!menuOpen())" aria-label="Toggle navigation">
+        <button type="button" class="admin-icon-button" (click)="menuOpen.set(!menuOpen())" id="admin-menu-toggle" [attr.aria-expanded]="menuOpen()" aria-controls="admin-sidebar" aria-label="Toggle navigation">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
         </button>
       </header>
 
-      <aside class="admin-sidebar" [class.is-open]="menuOpen()">
+      <aside id="admin-sidebar" class="admin-sidebar" [attr.inert]="mobile() && !menuOpen() ? '' : null" [class.is-open]="menuOpen()">
         <a routerLink="/admin" class="admin-brand" (click)="menuOpen.set(false)">
           <img class="admin-brand-mark" src="brand-mark.svg" alt="" width="52" height="52" />
           <span>Portfolio Admin</span>
@@ -24,7 +24,7 @@ import { AdminAuthService } from '../services/admin-auth.service';
         <div class="admin-sidebar-rule"></div>
         <nav aria-label="Admin navigation" class="admin-nav">
           @for (item of navigation; track item.path) {
-            <a [routerLink]="item.path" routerLinkActive="is-active" [routerLinkActiveOptions]="item.exact ? exactMatch : partialMatch" (click)="menuOpen.set(false)">
+            <a [routerLink]="item.path" routerLinkActive="is-active" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="item.exact ? exactMatch : partialMatch" (click)="menuOpen.set(false)">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="item.icon" /></svg>
               <span>{{ item.label }}</span>
             </a>
@@ -47,7 +47,7 @@ import { AdminAuthService } from '../services/admin-auth.service';
       </aside>
 
       @if (menuOpen()) {
-        <button class="admin-menu-scrim" type="button" (click)="menuOpen.set(false)" aria-label="Close navigation"></button>
+        <button class="admin-menu-scrim" type="button" (click)="dismissMenu()" aria-label="Close navigation"></button>
       }
 
       <div class="admin-main"><router-outlet /></div>
@@ -57,6 +57,19 @@ import { AdminAuthService } from '../services/admin-auth.service';
 export class AdminShellComponent {
   readonly auth = inject(AdminAuthService);
   readonly menuOpen = signal(false);
+  readonly mobile = signal(window.innerWidth <= 800);
+  @HostListener('window:resize') resize(): void {
+    this.mobile.set(window.innerWidth <= 800);
+    if (!this.mobile()) this.menuOpen.set(false);
+  }
+  @HostListener('document:focusin', ['$event']) revealFocusedContent(event: FocusEvent): void {
+    if (!this.mobile() || !this.menuOpen() || !(event.target instanceof HTMLElement)) return;
+    // This is a disclosure, not a modal: tabbing into the page dismisses its scrim.
+    if (!event.target.closest('#admin-sidebar, #admin-menu-toggle, .admin-menu-scrim')) this.menuOpen.set(false);
+  }
+  @HostListener('document:keydown.escape') dismissMenu(): void {
+    if (this.menuOpen()) { this.menuOpen.set(false); document.getElementById('admin-menu-toggle')?.focus(); }
+  }
   readonly exactMatch = { exact: true };
   readonly partialMatch = { exact: false };
   readonly navigation = [

@@ -8,27 +8,27 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
   imports: [RevealDirective],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <section id="experience" class="experience-section relative overflow-hidden border-y border-paper/7">
+    <section tabindex="-1" id="experience" class="experience-section relative overflow-hidden border-y border-paper/7">
       <div class="experience-glow" aria-hidden="true"></div>
 
       <div class="relative mx-auto max-w-[1400px] px-6 py-28 md:px-10 md:py-40">
         <div class="grid gap-16 md:grid-cols-12 md:gap-10">
           <header class="md:col-span-4 lg:col-span-3">
             <div class="md:sticky md:top-32" appReveal>
-              <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-paper/40">02 — Experience</p>
+              <p class="font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70">03 — Experience</p>
               <span class="mt-4 block h-px w-16 bg-paper/25"></span>
 
               <h2 class="mt-10 max-w-xs font-display text-[2.65rem] font-light leading-[0.98] text-paper md:mt-14 md:text-5xl">
                 Building interfaces<br />
                 <em class="font-light text-accent">since 2009.</em>
               </h2>
-              <p class="mt-7 max-w-[18rem] text-sm leading-relaxed text-paper/45">
+              <p class="mt-7 max-w-[18rem] text-base leading-relaxed text-paper/70">
                 A career shaped by the web’s evolution — from custom CMS builds to leading modern UI engineering.
               </p>
 
               <div class="mt-10 flex items-end gap-4 border-t border-paper/10 pt-6 md:mt-14">
                 <strong class="font-display text-5xl font-light leading-none text-paper">{{ profile.years }}</strong>
-                <span class="max-w-24 pb-1 font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em] text-paper/35">
+                <span class="max-w-24 pb-1 font-mono text-[12px] uppercase leading-relaxed tracking-[0.1em] text-paper/70">
                   Years of<br />digital craft
                 </span>
               </div>
@@ -37,8 +37,8 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
 
           <div class="md:col-span-8 md:pl-4 lg:col-span-8 lg:col-start-5">
             <div appReveal class="mb-8 flex items-center justify-between gap-4 md:mb-10">
-              <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-paper/35">Career ledger</p>
-              <p class="hidden items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-paper/30 sm:flex">
+              <p class="font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70">Career ledger</p>
+              <p class="hidden items-center gap-2 font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70 sm:flex">
                 <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
                 Select a role to explore
               </p>
@@ -53,7 +53,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                     [class.mt-10]="i > 0"
                   >
                     <span class="era-dot relative z-10 block h-2.5 w-2.5 rounded-full border border-accent bg-ink"></span>
-                    <span class="font-mono text-[9px] uppercase tracking-[0.26em] text-accent">
+                    <span class="font-mono text-[12px] uppercase tracking-[0.1em] text-accent">
                       {{ job.era === 'Now' ? 'Current chapter' : 'Earlier chapters' }}
                     </span>
                   </div>
@@ -75,7 +75,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                     (click)="toggle(i)"
                     data-cursor="Explore"
                   >
-                    <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-paper/35 md:col-span-3 md:pt-1">
+                    <span class="font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70 md:col-span-3 md:pt-1">
                       {{ job.period }}
                     </span>
 
@@ -83,16 +83,16 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                       <span class="block font-display text-[1.7rem] font-light leading-tight text-paper/78 transition-colors duration-500 group-hover:text-paper md:text-[2.15rem]">
                         {{ job.role }}
                       </span>
-                      <span class="mt-2 block text-sm text-paper/42 transition-colors duration-500 group-hover:text-paper/60">
+                      <span class="mt-2 block text-sm text-paper/70 transition-colors duration-500 group-hover:text-paper/60">
                         {{ job.company }}
                       </span>
                     </span>
 
                     <span class="flex items-center justify-between md:col-span-2 md:justify-end">
                       @if (i === 0) {
-                        <span class="mr-4 font-mono text-[8px] uppercase tracking-[0.18em] text-accent">Present</span>
+                        <span class="mr-4 font-mono text-[12px] uppercase tracking-[0.1em] text-accent">Present</span>
                       }
-                      <span class="entry-toggle relative grid h-9 w-9 shrink-0 place-items-center rounded-full border border-paper/15 text-paper/55 transition-all duration-500 group-hover:border-paper/35 group-hover:text-paper">
+                      <span class="entry-toggle relative grid h-9 w-9 shrink-0 place-items-center rounded-full border border-paper/15 text-paper/70 transition-all duration-500 group-hover:border-paper/35 group-hover:text-paper">
                         <span class="block h-px w-3.5 bg-current"></span>
                         <span class="toggle-vertical absolute block h-3.5 w-px bg-current transition-transform duration-500"></span>
                       </span>
@@ -108,10 +108,10 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                       <div class="grid gap-6 pb-9 md:grid-cols-12 md:pb-10">
                         <div class="hidden md:col-span-3 md:block" aria-hidden="true"></div>
                         <div class="md:col-span-7">
-                          <p class="max-w-xl text-[14px] leading-[1.8] text-paper/50">{{ job.note }}</p>
+                          <p class="max-w-xl text-[14px] leading-[1.8] text-paper/70">{{ job.note }}</p>
                           <div class="mt-6 flex flex-wrap gap-x-5 gap-y-3">
                             @for (tag of job.tags; track tag) {
-                              <span class="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.16em] text-paper/48">
+                              <span class="flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.16em] text-paper/70">
                                 <span class="text-accent" aria-hidden="true">+</span>{{ tag }}
                               </span>
                             }

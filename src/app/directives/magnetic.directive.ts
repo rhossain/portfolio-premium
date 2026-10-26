@@ -14,6 +14,7 @@ export class MagneticDirective implements OnInit, OnDestroy {
   private readonly zone = inject(NgZone);
 
   private move = (e: MouseEvent) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const rect = this.el.nativeElement.getBoundingClientRect();
     const relX = e.clientX - (rect.left + rect.width / 2);
     const relY = e.clientY - (rect.top + rect.height / 2);
@@ -35,7 +36,7 @@ export class MagneticDirective implements OnInit, OnDestroy {
   };
 
   ngOnInit(): void {
-    if (typeof window === 'undefined' || window.matchMedia('(pointer: coarse)').matches) return;
+    if (typeof window === 'undefined' || window.matchMedia('(pointer: coarse), (prefers-reduced-motion: reduce)').matches) return;
     this.zone.runOutsideAngular(() => {
       this.el.nativeElement.addEventListener('mousemove', this.move);
       this.el.nativeElement.addEventListener('mouseleave', this.leave);

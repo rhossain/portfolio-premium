@@ -168,12 +168,16 @@ export const EXPERIENCE: ExperienceItem[] = [
 ];
 
 export interface CaseStudy {
+  problem?: string;
+  decisions?: string[];
+  result?: string;
   role: string;
   overview: string;
   highlights: string[];
 }
 
 export interface Project {
+  slug?: string;
   index: string;
   title: string;
   category: string;
@@ -194,8 +198,8 @@ export const PROJECTS: Project[] = [
     category: 'UI Library',
     year: '2026',
     description:
-      'A production-ready Angular UI ecosystem with 120 components, backend-ready state contracts, three application templates and more than 500 icons — designed, engineered and documented end to end.',
-    stack: ['Angular 21', 'Tailwind CSS 4', 'TypeScript', 'npm'],
+      'An Angular UI ecosystem built around a shared data-state contract: reusable components, runnable application templates and live documentation, with backend integration treated as part of the product.',
+    stack: ['Angular 21 & 22', 'Tailwind CSS 4', 'TypeScript', 'npm'],
     url: 'https://styloviz.dev',
     images: [
       storageAsset('work/styloviz-1.webp', 'Styloviz — backend-ready component overview'),
@@ -207,12 +211,21 @@ export const PROJECTS: Project[] = [
     caseStudy: {
       role: 'Creator & Lead Engineer',
       overview:
-        'Styloviz is an Angular component ecosystem built for teams shipping real applications. It combines reusable interface primitives with shared backend-ready state contracts, production templates, documentation and an interactive playground.',
+        'I created Styloviz to bring interface design and application behaviour into one Angular ecosystem. The work spans reusable components, backend integration patterns, runnable templates, documentation and an interactive playground.',
+      problem:
+        'Real application data can arrive late, fail or return nothing. Teams need to connect their APIs, preserve user input and keep interactions consistent across different screens. Styloviz brings those integration needs into the component design.',
+      decisions: [
+        'Kept components independent of HTTP and a specific backend. Shared query, page, error and item-identity types let applications use their existing data layer; the data adapter remains optional.',
+        'Made loading, error, retry and empty states part of the component contract. Request guards, cancellation and keyed rows handle changing queries without accepting stale responses or losing row identity.',
+        'Used the same components in runnable templates and interactive documentation. Examples expose failure states as well as successful data, so integration behaviour can be inspected before adoption.',
+      ],
+      result:
+        'Delivered a live ecosystem of 169 components and 21 runnable application templates, supported by integration guides and an interactive playground. It provides a reusable foundation for building data-driven Angular interfaces.',
       highlights: [
-        '120 standalone components, three production templates and a tree-shakeable library of more than 500 icons',
-        'Shared loading, error, retry and empty-state contracts across 92 components that accept live data',
-        'Angular Signals, OnPush change detection, strict TypeScript, accessible interactions and light/dark theming',
-        'Free and Pro npm packages supported by live documentation, editable examples and zero runtime dependencies',
+        'Angular 21 and 22 support, standalone components, Signals, OnPush and strict TypeScript',
+        'An optional data adapter for query debouncing, cancellation and status-aware retries',
+        'Shared state handling without third-party runtime dependencies beyond the Angular and Tailwind foundation',
+        'Public Free and Pro packages, documentation, templates and inspectable component examples',
       ],
     },
   },
@@ -222,7 +235,7 @@ export const PROJECTS: Project[] = [
     category: 'E-commerce',
     year: '2024',
     description:
-      'A modular Angular storefront: RxJS and BehaviorSubject state management, JWT session handling, TTL-based caching to kill redundant requests, and intersection-observer lazy loading for large catalogues.',
+      'A modular Angular storefront connecting category browsing, product search and cart access with shared catalogue caching, lazy images and explicit loading and retry states.',
     stack: ['Angular', 'RxJS', 'Bootstrap', 'CSS3'],
     url: 'https://ngcommerce.rshossain.me',
     images: [
@@ -235,12 +248,21 @@ export const PROJECTS: Project[] = [
     caseStudy: {
       role: 'Lead UI Engineer',
       overview:
-        'A modular Angular storefront built to prove that enterprise e-commerce can feel fast. Every decision — from state management to asset loading — was measured against real catalogue sizes and slow networks.',
+        'I led the UI engineering for ngCommerce, bringing category navigation, catalogue search and cart access into a shared Angular storefront. The work combines reusable shopping interfaces with data services and image-loading behaviour.',
+      problem:
+        'Catalogue screens need to handle repeated navigation, large images and incomplete responses while keeping shopping controls understandable. Search, category selection and cart access need consistent feedback as data loads or becomes unavailable.',
+      decisions: [
+        'Used shared catalogue services with expiry-based caching. Repeated category requests can reuse recent data, while an expiry boundary allows the application to request a newer response.',
+        'Deferred product-image loading with IntersectionObserver and supplied an image fallback. Image work starts as cards approach the viewport instead of loading every catalogue image immediately.',
+        'Kept category navigation, search and cart access in a consistent storefront shell. Loading, empty and retry states explain when catalogue content is not yet available.',
+      ],
+      result:
+        'Delivered a modular storefront interface with category discovery, search, price filters and cart access. Shared caching and lazy image loading provide reusable integration patterns for catalogue screens.',
       highlights: [
-        'RxJS + BehaviorSubject state layer with TTL-based caching to kill redundant API calls',
-        'JWT session handling with route guards and silent token refresh',
-        'IntersectionObserver lazy loading keeps large catalogues at a steady 60fps',
-        'SEO-friendly, semantic templates translated pixel-perfect from Figma',
+        'Angular shopping interfaces with reusable catalogue services',
+        'Expiry-based category caching with a shared cache boundary',
+        'IntersectionObserver product-image loading and image fallbacks',
+        'Category and price filters, empty-state messaging and explicit retry actions',
       ],
     },
   },
@@ -250,7 +272,7 @@ export const PROJECTS: Project[] = [
     category: 'E-commerce',
     year: '2023',
     description:
-      'A fully responsive nopCommerce theme — custom templates, product galleries and checkout flows tuned for conversion across devices.',
+      'A fashion storefront theme for nopCommerce, bringing campaign imagery, catalogue filters and product selection into a consistent visual system.',
     stack: ['nopCommerce', 'Razor', 'SCSS', 'JavaScript'],
     images: [
       storageAsset('work/kalles-1.jpg', 'Nop Kalles — screen 1'),
@@ -262,12 +284,21 @@ export const PROJECTS: Project[] = [
     caseStudy: {
       role: 'UI Engineer',
       overview:
-        'A fully responsive nopCommerce theme for a fashion retailer — custom Razor templates, product galleries and a checkout flow tuned for conversion across devices.',
+        'My UI work on Nop Kalles focused on the shopping journey from a seasonal campaign to a catalogue and product detail page. Large photography, restrained typography and a shared palette connect the editorial presentation with practical shopping controls.',
+      problem:
+        'A fashion storefront needs to communicate the collection while making individual products easy to compare and configure. Campaign imagery, catalogue filters and purchase controls need a clear hierarchy so the presentation supports the shopping task.',
+      decisions: [
+        'Gave campaign and product photography the largest visual areas, with restrained type and muted accents. Collection links and product prices remain distinct within that hierarchy.',
+        'Placed category, size, colour and price controls beside the catalogue grid. Product cards use a consistent image, name and price pattern to support comparison.',
+        'Grouped price, colour, size, quantity and the add-to-cart control beside the product gallery. Supporting description and shipping information sit below the primary purchase controls.',
+      ],
+      result:
+        'Created a consistent fashion-storefront presentation across the homepage, catalogue and product detail layouts. The project connects collection discovery, product comparison and item selection within one visual system.',
       highlights: [
-        'Custom Razor templates overriding nopCommerce views without touching core code',
-        'Product gallery with zoom, thumbnails and variant-aware image switching',
-        'Checkout flow simplified to reduce drop-off on mobile',
-        'SCSS architecture with reusable mixins for rapid seasonal reskinning',
+        'Campaign-led homepage with collection links and a product grid',
+        'Catalogue layout with category, size, colour and price controls',
+        'Product gallery with thumbnails and a clearly grouped purchase panel',
+        'Shared typography, spacing and muted accents across the storefront',
       ],
     },
   },
@@ -277,7 +308,7 @@ export const PROJECTS: Project[] = [
     category: 'E-commerce',
     year: '2022',
     description:
-      'Elegant ecommerce UI with carefully crafted product detail pages, category filtering and a mobile-first responsive grid.',
+      'A jewellery storefront interface combining dark product photography, gold accents, collection filters and a focused product-selection layout.',
     stack: ['HTML5', 'Tailwind CSS', 'JavaScript'],
     images: [
       storageAsset('work/fortune-1.jpg', 'Fortune — screen 1'),
@@ -289,12 +320,21 @@ export const PROJECTS: Project[] = [
     caseStudy: {
       role: 'UI Engineer',
       overview:
-        'An elegant e-commerce UI for a jewellery brand — where restraint matters. Carefully crafted product detail pages and a mobile-first grid let the pieces carry the drama.',
+        'My UI work on Fortune brings jewellery discovery and product selection into a consistent storefront presentation. A dark palette and large product imagery carry the brand, while collection controls and purchase information give each page a practical structure.',
+      problem:
+        'Jewellery needs close visual inspection alongside clear information about price, material and available options. The interface needs to balance that detail with a distinct brand presentation across collection and product pages.',
+      decisions: [
+        'Used dark backgrounds and gold accents across navigation, product cards and actions. Large photography and restrained supporting text keep the jewellery prominent within the page hierarchy.',
+        'Placed price, material and length controls beside the collection grid, with a separate sorting control. Repeated image, name and price patterns make the available pieces easier to compare.',
+        'Grouped metal selection, quantity and the purchase action beside the product gallery. Product details, shipping and care information sit in secondary sections beneath those controls.',
+      ],
+      result:
+        'Created a cohesive jewellery-storefront presentation across the homepage, collection and product detail layouts. A shared visual language connects category discovery, product comparison and selection of an individual piece.',
       highlights: [
-        'Tailwind CSS design tokens for consistent spacing, type and gold-accent palette',
-        'Product detail pages with material selectors and care-accordions',
-        'Category filtering that stays instant on large collections',
-        'Mobile-first grid that reflows gracefully from 320px upward',
+        'Campaign homepage with jewellery categories and new-arrival cards',
+        'Collection layout with price, material, length and sorting controls',
+        'Product gallery and purchase panel with metal and quantity selection',
+        'Consistent dark surfaces, gold accents and product-led typography',
       ],
     },
   },
@@ -413,3 +453,8 @@ export const DEFAULT_PORTFOLIO: PortfolioContent = {
   skillGroups: SKILL_GROUPS,
   socials: SOCIALS,
 };
+
+/** Explicit slugs stay stable when project titles change; legacy content remains compatible. */
+export function projectSlug(project: Project): string {
+  return project.slug || project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'project-' + project.index;
+}

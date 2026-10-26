@@ -6,9 +6,9 @@ import { CaseStudyComponent } from './case-study.component';
 
 describe('CaseStudyComponent', () => {
   it('opens after an animation frame without depending on a global scroll tick', async () => {
-    let frame!: FrameRequestCallback;
+    const frames: FrameRequestCallback[] = [];
     spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
-      frame = callback;
+      frames.push(callback);
       return 1;
     });
     const scroll = jasmine.createSpyObj<ScrollService>('scroll', ['stop', 'start']);
@@ -22,7 +22,11 @@ describe('CaseStudyComponent', () => {
 
     expect(scroll.stop).toHaveBeenCalled();
     expect(fixture.nativeElement.querySelector('.case-study.is-open')).toBeNull();
-    TestBed.inject(NgZone).runOutsideAngular(() => frame(0));
+    for (let iteration = 0; iteration < 3; iteration++) {
+      const pending = frames.splice(0);
+      TestBed.inject(NgZone).runOutsideAngular(() => pending.forEach(callback => callback(0)));
+      fixture.detectChanges();
+    }
     await fixture.whenStable();
 
     expect(fixture.nativeElement.querySelector('.case-study.is-open')).not.toBeNull();

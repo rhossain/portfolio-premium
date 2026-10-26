@@ -20,7 +20,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
   imports: [RevealDirective],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <section id="about" class="relative overflow-hidden py-28 md:py-40">
+    <section tabindex="-1" id="about" class="relative overflow-hidden py-20 md:py-28">
       <!-- faint section glow -->
       <div
         class="pointer-events-none absolute left-[-15vw] top-[10%] h-[40vw] w-[40vw] rounded-full opacity-60 blur-[110px]"
@@ -29,7 +29,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
 
       <div class="mx-auto max-w-[1400px] px-6 md:px-10">
         <div class="mb-16 md:mb-24" appReveal>
-          <p class="font-mono text-[11px] uppercase tracking-[0.3em] text-paper/40">01 — About</p>
+          <p class="font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70">02 — About</p>
           <span class="mt-4 block h-px w-16 bg-paper/25"></span>
         </div>
 
@@ -45,7 +45,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
               }
             </h2>
 
-            <p appReveal [revealDelay]="140" class="mt-8 font-mono text-[12px] uppercase tracking-[0.25em] text-paper/50">
+            <p appReveal [revealDelay]="140" class="mt-8 font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70">
               {{ profile.firstName }} is a
               <span class="rotator text-accent">
                 <span class="rotator-track" [style.transform]="'translateY(-' + wordIndex() * 1.25 + 'em)'">
@@ -61,7 +61,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                 <p
                   appReveal
                   [revealDelay]="180 + $index * 120"
-                  class="max-w-md text-[15px] leading-relaxed text-paper/55"
+                  class="max-w-md text-[15px] leading-relaxed text-paper/70"
                 >
                   {{ p }}
                 </p>
@@ -74,11 +74,11 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
               class="mt-14 flex flex-wrap gap-2 border-t border-paper/10 pt-8"
             >
               @for (lang of about.languages; track lang) {
-                <span class="border border-paper/15 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.15em] text-paper/50">
+                <span class="border border-paper/15 px-4 py-2 font-mono text-[12px] uppercase tracking-[0.15em] text-paper/70">
                   {{ lang }}
                 </span>
               }
-              <span class="border border-accent/50 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.15em] text-accent">
+              <span class="border border-accent/50 px-4 py-2 font-mono text-[12px] uppercase tracking-[0.15em] text-accent">
                 {{ profile.location }}
               </span>
             </div>
@@ -99,7 +99,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
                 <span class="frame-corner left-3 top-3 border-l border-t"></span>
                 <span class="frame-corner bottom-3 right-3 border-b border-r"></span>
               </div>
-              <figcaption class="mt-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.25em] text-paper/40">
+              <figcaption class="mt-4 flex items-center justify-between font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70">
                 <span>Where the work happens</span>
                 <span class="text-accent">Dhaka, BD</span>
               </figcaption>
@@ -112,7 +112,7 @@ import { PortfolioContentService } from '../services/portfolio-content.service';
           @for (s of about.stats; track s.label) {
             <div appReveal [revealDelay]="$index * 100">
               <p class="font-display text-4xl font-light text-paper md:text-5xl">{{ s.value }}</p>
-              <p class="mt-3 max-w-[140px] font-mono text-[10px] uppercase tracking-[0.25em] text-paper/40">
+              <p class="mt-3 max-w-[140px] font-mono text-[12px] uppercase tracking-[0.1em] text-paper/70">
                 {{ s.label }}
               </p>
             </div>
@@ -143,6 +143,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.intervalId = setInterval(() => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       this.wordIndex.set((this.wordIndex() + 1) % this.words.length);
     }, 2600);
   }
@@ -178,7 +179,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     const lit = progress * this.wordSpans.length;
     this.wordSpans.forEach((s, i) => {
       const w = Math.min(1, Math.max(0, lit - i));
-      s.style.opacity = (0.18 + 0.82 * w).toFixed(3);
+      s.style.opacity = (0.7 + 0.3 * w).toFixed(3);
     });
   }
 
