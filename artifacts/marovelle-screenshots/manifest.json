@@ -1,0 +1,297 @@
+{
+  "captured": "2026-11-19",
+  "galleryCount": 16,
+  "desktopCount": 13,
+  "mobileCompositionCount": 3,
+  "mobileSourceCount": 6,
+  "totalGalleryBytes": 2562064,
+  "images": [
+    {
+      "id": "01-homepage",
+      "title": "Homepage · recommended cover",
+      "file": "marovelle-01-homepage.webp",
+      "source": "https://marovelle.rshossain.me/",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 232380,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "02-property-search",
+      "title": "Property search & filters",
+      "file": "marovelle-02-property-search.webp",
+      "source": "https://marovelle.rshossain.me/properties",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 185846,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "03-residence-gallery",
+      "title": "Residence · photo gallery",
+      "file": "marovelle-03-residence-gallery.webp",
+      "source": "https://marovelle.rshossain.me/properties/the-gulshan-residence",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 166636,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "04-residence-details",
+      "title": "Residence · details & amenities",
+      "file": "marovelle-04-residence-details.webp",
+      "source": "https://marovelle.rshossain.me/properties/the-gulshan-residence",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 87382,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "05-neighborhood-map",
+      "title": "Neighborhood map · international collection",
+      "file": "marovelle-05-neighborhood-map.webp",
+      "source": "https://marovelle.rshossain.me/map",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 203116,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "06-developments",
+      "title": "Development collection",
+      "file": "marovelle-06-developments.webp",
+      "source": "https://marovelle.rshossain.me/projects",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 289840,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "07-development-inventory",
+      "title": "Development · residence inventory",
+      "file": "marovelle-07-development-inventory.webp",
+      "source": "https://marovelle.rshossain.me/projects/the-grove",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 51206,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "08-interactive-floor-plan",
+      "title": "Interactive floor plan",
+      "file": "marovelle-08-interactive-floor-plan.webp",
+      "source": "https://marovelle.rshossain.me/projects/the-grove",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 74416,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "09-advisors",
+      "title": "Local advisor directory",
+      "file": "marovelle-09-advisors.webp",
+      "source": "https://marovelle.rshossain.me/agents",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 159178,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "10-journal",
+      "title": "Journal & editorial",
+      "file": "marovelle-10-journal.webp",
+      "source": "https://marovelle.rshossain.me/insights",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 193624,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "11-city-guide",
+      "title": "Dhaka · city collection",
+      "file": "marovelle-11-city-guide.webp",
+      "source": "https://marovelle.rshossain.me/locations/dhaka",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 375496,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "12-sales-workspace",
+      "title": "Sales workspace · leads inbox",
+      "file": "marovelle-12-sales-workspace.webp",
+      "source": "https://marovelle.rshossain.me/admin/leads",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 76202,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "13-homepage-collection",
+      "title": "Homepage · curated collection",
+      "file": "marovelle-13-homepage-collection.webp",
+      "source": "https://marovelle.rshossain.me/",
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 117280,
+      "mobile": false,
+      "errors": []
+    },
+    {
+      "id": "14-mobile-discovery",
+      "title": "Mobile · homepage & property search",
+      "file": "marovelle-14-mobile-discovery.webp",
+      "source": [
+        "https://marovelle.rshossain.me/",
+        "https://marovelle.rshossain.me/properties"
+      ],
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 112318,
+      "mobile": false,
+      "composition": "two mobile screens",
+      "mobileSources": [
+        "mobile/marovelle-m01-homepage.webp",
+        "mobile/marovelle-m02-property-search.webp"
+      ]
+    },
+    {
+      "id": "15-mobile-residence-map",
+      "title": "Mobile · residence & map",
+      "file": "marovelle-15-mobile-residence-map.webp",
+      "source": [
+        "https://marovelle.rshossain.me/properties/the-gulshan-residence",
+        "https://marovelle.rshossain.me/map"
+      ],
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 102190,
+      "mobile": false,
+      "composition": "two mobile screens",
+      "mobileSources": [
+        "mobile/marovelle-m03-residence-detail.webp",
+        "mobile/marovelle-m04-neighborhood-map.webp"
+      ]
+    },
+    {
+      "id": "16-mobile-development-advisors",
+      "title": "Mobile · development & advisors",
+      "file": "marovelle-16-mobile-development-advisors.webp",
+      "source": [
+        "https://marovelle.rshossain.me/projects/the-grove",
+        "https://marovelle.rshossain.me/agents"
+      ],
+      "theme": "light",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 134954,
+      "mobile": false,
+      "composition": "two mobile screens",
+      "mobileSources": [
+        "mobile/marovelle-m05-development.webp",
+        "mobile/marovelle-m06-advisors.webp"
+      ]
+    }
+  ],
+  "mobileSources": [
+    {
+      "id": "m01-homepage",
+      "title": "Mobile · homepage",
+      "file": "mobile/marovelle-m01-homepage.webp",
+      "source": "https://marovelle.rshossain.me/",
+      "theme": "light",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 112380,
+      "mobile": true,
+      "errors": []
+    },
+    {
+      "id": "m02-property-search",
+      "title": "Mobile · property search",
+      "file": "mobile/marovelle-m02-property-search.webp",
+      "source": "https://marovelle.rshossain.me/properties",
+      "theme": "light",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 89886,
+      "mobile": true,
+      "errors": []
+    },
+    {
+      "id": "m03-residence-detail",
+      "title": "Mobile · residence detail",
+      "file": "mobile/marovelle-m03-residence-detail.webp",
+      "source": "https://marovelle.rshossain.me/properties/the-gulshan-residence",
+      "theme": "light",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 93472,
+      "mobile": true,
+      "errors": []
+    },
+    {
+      "id": "m04-neighborhood-map",
+      "title": "Mobile · neighborhood map",
+      "file": "mobile/marovelle-m04-neighborhood-map.webp",
+      "source": "https://marovelle.rshossain.me/map",
+      "theme": "light",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 83980,
+      "mobile": true,
+      "errors": []
+    },
+    {
+      "id": "m05-development",
+      "title": "Mobile · development",
+      "file": "mobile/marovelle-m05-development.webp",
+      "source": "https://marovelle.rshossain.me/projects/the-grove",
+      "theme": "light",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 136020,
+      "mobile": true,
+      "errors": []
+    },
+    {
+      "id": "m06-advisors",
+      "title": "Mobile · advisors",
+      "file": "mobile/marovelle-m06-advisors.webp",
+      "source": "https://marovelle.rshossain.me/agents",
+      "theme": "light",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 118804,
+      "mobile": true,
+      "errors": []
+    }
+  ]
+}

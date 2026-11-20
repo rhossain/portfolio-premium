@@ -1,7 +1,7 @@
 {
-  "captured": "2026-10-23",
+  "captured": "2026-11-19",
   "imageCount": 20,
-  "totalBytes": 2324220,
+  "totalBytes": 2380454,
   "images": [
     {
       "id": "01-homepage",
@@ -11,9 +11,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 95002,
+      "bytes": 98988,
       "alt": "Styloviz — Homepage · recommended cover",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-01-homepage.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-01-homepage.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "02-backend-wiring",
@@ -23,9 +27,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 117782,
+      "bytes": 115884,
       "alt": "Styloviz — Backend wiring & state contract",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-02-backend-wiring.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-02-backend-wiring.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "03-component-library",
@@ -35,9 +43,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 152070,
+      "bytes": 149396,
       "alt": "Styloviz — Component library overview",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-03-component-library.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-03-component-library.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "04-template-collection",
@@ -47,9 +59,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 129088,
+      "bytes": 130078,
       "alt": "Styloviz — Template collection",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-04-template-collection.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-04-template-collection.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "05-admin-dashboard",
@@ -59,9 +75,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 122294,
+      "bytes": 123182,
       "alt": "Styloviz — Admin · ecommerce dashboard",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-05-admin-dashboard.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-05-admin-dashboard.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "06-analytics-dashboard",
@@ -71,9 +91,13 @@
       "theme": "light",
       "width": 2400,
       "height": 1500,
-      "bytes": 108080,
+      "bytes": 108726,
       "alt": "Styloviz — Admin · analytics dashboard",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-06-analytics-dashboard.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-06-analytics-dashboard.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "07-ai-ops-console",
@@ -83,9 +107,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 135240,
+      "bytes": 135254,
       "alt": "Styloviz — AI operations console",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-07-ai-ops-console.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-07-ai-ops-console.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "08-ai-workflow-builder",
@@ -95,9 +123,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 59476,
+      "bytes": 59528,
       "alt": "Styloviz — Visual AI workflow builder",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-08-ai-workflow-builder.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-08-ai-workflow-builder.webp",
+      "captureViewport": {
+        "width": 1920,
+        "height": 1200
+      }
     },
     {
       "id": "09-commerce-storefront",
@@ -107,9 +139,13 @@
       "theme": "light",
       "width": 2400,
       "height": 1500,
-      "bytes": 141884,
+      "bytes": 122638,
       "alt": "Styloviz — E-commerce storefront",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-09-commerce-storefront.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-09-commerce-storefront.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "10-project-board",
@@ -119,9 +155,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 122446,
+      "bytes": 122524,
       "alt": "Styloviz — Project management · sprint board",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-10-project-board.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-10-project-board.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "11-project-timeline",
@@ -131,9 +171,13 @@
       "theme": "light",
       "width": 2400,
       "height": 1500,
-      "bytes": 129840,
+      "bytes": 131268,
       "alt": "Styloviz — Project management · timeline",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-11-project-timeline.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-11-project-timeline.webp",
+      "captureViewport": {
+        "width": 1920,
+        "height": 1200
+      }
     },
     {
       "id": "12-calendar-scheduler",
@@ -143,9 +187,13 @@
       "theme": "light",
       "width": 2400,
       "height": 1500,
-      "bytes": 85642,
+      "bytes": 127114,
       "alt": "Styloviz — Calendar & scheduling",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-12-calendar-scheduler.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-12-calendar-scheduler.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "13-real-estate-explorer",
@@ -155,9 +203,13 @@
       "theme": "light",
       "width": 2400,
       "height": 1500,
-      "bytes": 112530,
+      "bytes": 112546,
       "alt": "Styloviz — Real estate · map & listings",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-13-real-estate-explorer.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-13-real-estate-explorer.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "14-pos-register",
@@ -167,9 +219,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 140640,
+      "bytes": 140954,
       "alt": "Styloviz — POS · populated ticket",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-14-pos-register.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-14-pos-register.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "15-learning-platform",
@@ -179,9 +235,13 @@
       "theme": "light",
       "width": 2400,
       "height": 1500,
-      "bytes": 115988,
+      "bytes": 114640,
       "alt": "Styloviz — Learning platform",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-15-learning-platform.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-15-learning-platform.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "16-data-table-playground",
@@ -191,9 +251,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 121706,
+      "bytes": 119470,
       "alt": "Styloviz — Interactive data-table playground",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-16-data-table-playground.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-16-data-table-playground.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "17-chart-components",
@@ -203,9 +267,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 109994,
+      "bytes": 124080,
       "alt": "Styloviz — Chart component gallery",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-17-chart-components.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-17-chart-components.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "18-schema-form-builder",
@@ -215,9 +283,13 @@
       "theme": "light",
       "width": 2400,
       "height": 1500,
-      "bytes": 146642,
+      "bytes": 150146,
       "alt": "Styloviz — Schema form & payload preview",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-18-schema-form-builder.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-18-schema-form-builder.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "19-icon-library",
@@ -227,9 +299,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 110186,
+      "bytes": 121274,
       "alt": "Styloviz — Icon library",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-19-icon-library.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-19-icon-library.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     },
     {
       "id": "20-agent-monitor",
@@ -239,9 +315,13 @@
       "theme": "dark",
       "width": 2400,
       "height": 1500,
-      "bytes": 67690,
+      "bytes": 72764,
       "alt": "Styloviz — AI agent execution monitor",
-      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-20-agent-monitor.webp"
+      "path": "/Users/bs1071/Documents/templates/portfolio-angular/public/work/styloviz/styloviz-20-agent-monitor.webp",
+      "captureViewport": {
+        "width": 1600,
+        "height": 1000
+      }
     }
   ]
 }

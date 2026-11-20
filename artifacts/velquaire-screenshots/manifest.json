@@ -1,0 +1,316 @@
+{
+  "captured": "2026-11-20",
+  "galleryCount": 16,
+  "desktopCount": 13,
+  "mobileCompositionCount": 3,
+  "mobileSourceCount": 6,
+  "totalGalleryBytes": 2258280,
+  "images": [
+    {
+      "id": "01-homepage-dark",
+      "title": "Homepage · recommended cover",
+      "state": "home",
+      "theme": "dark",
+      "mobile": false,
+      "file": "velquaire-01-homepage-dark.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 157910,
+      "errors": []
+    },
+    {
+      "id": "02-estate-portfolio",
+      "title": "Estate portfolio & search",
+      "state": "catalog",
+      "theme": "light",
+      "mobile": false,
+      "file": "velquaire-02-estate-portfolio.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 205166,
+      "errors": []
+    },
+    {
+      "id": "03-estate-intelligence",
+      "title": "Estate dossier · intelligence",
+      "state": "intelligence",
+      "theme": "dark",
+      "mobile": false,
+      "file": "velquaire-03-estate-intelligence.webp",
+      "source": "https://velquaire.rshossain.me/?property=prop-1",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 155546,
+      "errors": []
+    },
+    {
+      "id": "04-estate-gallery",
+      "title": "Estate dossier · photo gallery",
+      "state": "gallery",
+      "theme": "light",
+      "mobile": false,
+      "file": "velquaire-04-estate-gallery.webp",
+      "source": "https://velquaire.rshossain.me/?property=prop-1",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 144586,
+      "errors": []
+    },
+    {
+      "id": "05-spatial-floor-plan",
+      "title": "Interactive spatial floor plan",
+      "state": "floorplan",
+      "theme": "dark",
+      "mobile": false,
+      "file": "velquaire-05-spatial-floor-plan.webp",
+      "source": "https://velquaire.rshossain.me/?property=prop-1",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 116180,
+      "errors": []
+    },
+    {
+      "id": "06-estate-finance",
+      "title": "Estate dossier · finance tools",
+      "state": "finance",
+      "theme": "light",
+      "mobile": false,
+      "file": "velquaire-06-estate-finance.webp",
+      "source": "https://velquaire.rshossain.me/?property=prop-1",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 138042,
+      "errors": []
+    },
+    {
+      "id": "07-buyer-suite",
+      "title": "Buyer suite · watchlist",
+      "state": "buyer",
+      "theme": "dark",
+      "mobile": false,
+      "file": "velquaire-07-buyer-suite.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 158522,
+      "errors": []
+    },
+    {
+      "id": "08-estate-comparison",
+      "title": "Estate comparison dossier",
+      "state": "comparison",
+      "theme": "light",
+      "mobile": false,
+      "file": "velquaire-08-estate-comparison.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 108136,
+      "errors": []
+    },
+    {
+      "id": "09-portfolio-forecaster",
+      "title": "Buyer suite · portfolio forecaster",
+      "state": "roi",
+      "theme": "dark",
+      "mobile": false,
+      "file": "velquaire-09-portfolio-forecaster.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 124870,
+      "errors": []
+    },
+    {
+      "id": "10-advisor-portfolio",
+      "title": "Advisor CRM · listing portfolio",
+      "state": "advisor",
+      "theme": "light",
+      "mobile": false,
+      "file": "velquaire-10-advisor-portfolio.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 130584,
+      "errors": []
+    },
+    {
+      "id": "11-advisor-leads",
+      "title": "Advisor CRM · client leads",
+      "state": "leads",
+      "theme": "dark",
+      "mobile": false,
+      "file": "velquaire-11-advisor-leads.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 128874,
+      "errors": []
+    },
+    {
+      "id": "12-governance-terminal",
+      "title": "Governance terminal · overview",
+      "state": "terminal",
+      "theme": "dark",
+      "mobile": false,
+      "file": "velquaire-12-governance-terminal.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 127766,
+      "errors": []
+    },
+    {
+      "id": "13-homepage-light",
+      "title": "Homepage · light alternative",
+      "state": "home",
+      "theme": "light",
+      "mobile": false,
+      "file": "velquaire-13-homepage-light.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 158530,
+      "errors": []
+    },
+    {
+      "id": "14-mobile-discovery",
+      "title": "Mobile · homepage & portfolio",
+      "file": "velquaire-14-mobile-discovery.webp",
+      "source": [
+        "https://velquaire.rshossain.me/",
+        "https://velquaire.rshossain.me/"
+      ],
+      "theme": "mixed",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 158184,
+      "mobile": false,
+      "composition": "two mobile screens",
+      "mobileSources": [
+        "mobile/velquaire-m01-homepage.webp",
+        "mobile/velquaire-m02-estate-portfolio.webp"
+      ]
+    },
+    {
+      "id": "15-mobile-buyer-experience",
+      "title": "Mobile · estate gallery & buyer suite",
+      "file": "velquaire-15-mobile-buyer-experience.webp",
+      "source": [
+        "https://velquaire.rshossain.me/?property=prop-1",
+        "https://velquaire.rshossain.me/"
+      ],
+      "theme": "mixed",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 137806,
+      "mobile": false,
+      "composition": "two mobile screens",
+      "mobileSources": [
+        "mobile/velquaire-m03-estate-gallery.webp",
+        "mobile/velquaire-m04-buyer-suite.webp"
+      ]
+    },
+    {
+      "id": "16-mobile-workspace",
+      "title": "Mobile · floor plan & advisor CRM",
+      "file": "velquaire-16-mobile-workspace.webp",
+      "source": [
+        "https://velquaire.rshossain.me/?property=prop-1",
+        "https://velquaire.rshossain.me/"
+      ],
+      "theme": "mixed",
+      "width": 2400,
+      "height": 1500,
+      "bytes": 107578,
+      "mobile": false,
+      "composition": "two mobile screens",
+      "mobileSources": [
+        "mobile/velquaire-m05-spatial-floor-plan.webp",
+        "mobile/velquaire-m06-advisor-crm.webp"
+      ]
+    }
+  ],
+  "mobileSources": [
+    {
+      "id": "m01-homepage",
+      "title": "Mobile · homepage",
+      "state": "home",
+      "theme": "dark",
+      "mobile": true,
+      "file": "mobile/velquaire-m01-homepage.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 141502,
+      "errors": []
+    },
+    {
+      "id": "m02-estate-portfolio",
+      "title": "Mobile · estate portfolio",
+      "state": "catalog",
+      "theme": "light",
+      "mobile": true,
+      "file": "mobile/velquaire-m02-estate-portfolio.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 181660,
+      "errors": []
+    },
+    {
+      "id": "m03-estate-gallery",
+      "title": "Mobile · estate gallery",
+      "state": "gallery",
+      "theme": "light",
+      "mobile": true,
+      "file": "mobile/velquaire-m03-estate-gallery.webp",
+      "source": "https://velquaire.rshossain.me/?property=prop-1",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 144578,
+      "errors": []
+    },
+    {
+      "id": "m04-buyer-suite",
+      "title": "Mobile · buyer suite",
+      "state": "buyer",
+      "theme": "dark",
+      "mobile": true,
+      "file": "mobile/velquaire-m04-buyer-suite.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 129008,
+      "errors": []
+    },
+    {
+      "id": "m05-spatial-floor-plan",
+      "title": "Mobile · spatial floor plan",
+      "state": "floorplan",
+      "theme": "dark",
+      "mobile": true,
+      "file": "mobile/velquaire-m05-spatial-floor-plan.webp",
+      "source": "https://velquaire.rshossain.me/?property=prop-1",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 101294,
+      "errors": []
+    },
+    {
+      "id": "m06-advisor-crm",
+      "title": "Mobile · advisor CRM",
+      "state": "advisor",
+      "theme": "dark",
+      "mobile": true,
+      "file": "mobile/velquaire-m06-advisor-crm.webp",
+      "source": "https://velquaire.rshossain.me/",
+      "width": 1075,
+      "height": 2250,
+      "bytes": 87146,
+      "errors": []
+    }
+  ]
+}
