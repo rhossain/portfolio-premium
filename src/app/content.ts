@@ -188,6 +188,8 @@ export interface Project {
   images: MediaAsset[];
   palette: { base: string; orb: string; orb2: string };
   wide: boolean;
+  /** Hidden projects stay in the CMS but are not shown on the public site. */
+  hidden?: boolean;
   caseStudy: CaseStudy;
 }
 
@@ -457,4 +459,12 @@ export const DEFAULT_PORTFOLIO: PortfolioContent = {
 /** Explicit slugs stay stable when project titles change; legacy content remains compatible. */
 export function projectSlug(project: Project): string {
   return project.slug || project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'project-' + project.index;
+}
+
+/** Public view of the content: hidden projects removed, visible ones renumbered contiguously. */
+export function publicContent(content: PortfolioContent): PortfolioContent {
+  const projects = content.projects
+    .filter(project => !project.hidden)
+    .map((project, index) => ({ ...project, index: String(index + 1).padStart(2, '0') }));
+  return { ...content, projects };
 }

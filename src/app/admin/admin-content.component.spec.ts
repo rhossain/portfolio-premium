@@ -133,6 +133,22 @@ describe('AdminContentComponent project ordering', () => {
     expect(component.draft()!.projects[0].images.length).toBe(before);
   });
 
+  it('removes multiple selected images at once and can undo', async () => {
+    spyOn(TestBed.inject(ConfirmationService), 'ask').and.resolveTo(true);
+    const project = component.draft()!.projects[0];
+    project.images = [
+      { src: 'a.webp', alt: 'A' }, { src: 'b.webp', alt: 'B' }, { src: 'c.webp', alt: 'C' },
+    ] as typeof project.images;
+    component.toggleImage('a.webp');
+    component.toggleImage('c.webp');
+    expect(component.selectedImageCount(project)).toBe(2);
+    await component.deleteSelectedImages(project);
+    expect(component.draft()!.projects[0].images.map(image => image.src)).toEqual(['b.webp']);
+    expect(component.selectedImages().size).toBe(0);
+    component.undoRemoval();
+    expect(component.draft()!.projects[0].images.length).toBe(3);
+  });
+
   it('expires removal undo when subsequent edits would be overwritten', async () => {
     spyOn(TestBed.inject(ConfirmationService), 'ask').and.resolveTo(true);
     const project = component.draft()!.projects[0];

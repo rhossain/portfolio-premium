@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { DEFAULT_PORTFOLIO, PortfolioContent } from '../content';
+import { DEFAULT_PORTFOLIO, PortfolioContent, publicContent } from '../content';
 import { SupabaseService } from './supabase.service';
 
 function cloneContent(content: PortfolioContent): PortfolioContent {
@@ -31,7 +31,7 @@ export class PortfolioContentService {
       return;
     }
 
-    this.content.set(data as PortfolioContent);
+    this.content.set(publicContent(data as PortfolioContent));
     this.source.set('supabase');
     this.loading.set(false);
   }

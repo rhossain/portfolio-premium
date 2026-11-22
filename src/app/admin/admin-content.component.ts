@@ -149,16 +149,16 @@ type Section = 'profile' | 'experience' | 'projects' | 'skills' | 'navigation' |
                 <p class="admin-reorder-help" id="project-order-help">This is the portfolio order. Use the arrows to move a project, then save the draft.</p>
                 <div class="admin-project-records" role="list" aria-describedby="project-order-help">
                   @for (project of content.projects; track project; let i = $index) {
-                    <div class="admin-record-row" role="listitem" [class.is-selected]="selectedProject() === i">
+                    <div class="admin-record-row" role="listitem" [class.is-selected]="selectedProject() === i" [class.is-hidden]="project.hidden">
                       <button
                         type="button"
                         class="admin-record admin-project-record-select"
                         [class.is-selected]="selectedProject() === i"
                         [attr.aria-pressed]="selectedProject() === i"
-                        (click)="selectedProject.set(i)"
+                        (click)="selectProject(i)"
                       >
                         <strong>{{ project.index }} · {{ project.title || 'Untitled project' }}</strong>
-                        <span>{{ project.category || 'Category' }} · {{ project.year || 'Year' }}</span>
+                        <span>{{ project.category || 'Category' }} · {{ project.year || 'Year' }}@if (project.hidden) { · <em class="admin-hidden-badge">Hidden</em> }</span>
                       </button>
                       <div class="admin-record-order" role="group" [attr.aria-label]="'Change position for ' + (project.title || 'Untitled project') + ', currently ' + (i + 1) + ' of ' + content.projects.length">
                         <button
@@ -201,6 +201,7 @@ type Section = 'profile' | 'experience' | 'projects' | 'skills' | 'navigation' |
                     <label class="admin-field"><span>Live URL</span><input type="url" [(ngModel)]="project.url" (ngModelChange)="markDirty()" /></label>
                     <label class="admin-field"><span>Description</span><textarea class="resize-none" rows="5" [(ngModel)]="project.description" (ngModelChange)="markDirty()"></textarea></label>
                     <label class="admin-field"><span>Technology stack <small>comma separated</small></span><input [ngModel]="project.stack.join(', ')" (ngModelChange)="project.stack = splitComma($event); markDirty()" /></label>
+                    <label class="admin-check"><input type="checkbox" [ngModel]="!project.hidden" (ngModelChange)="project.hidden = !$event; markDirty()" /><span>Show on public site <small>unchecked projects stay in the draft but are hidden after publishing</small></span></label>
                     <label class="admin-check"><input type="checkbox" [(ngModel)]="project.wide" (ngModelChange)="markDirty()" /><span>Use wide project layout</span></label>
                     <div class="admin-grid-3">
                       <label class="admin-field"><span>Base color</span><input type="color" [(ngModel)]="project.palette.base" (ngModelChange)="markDirty()" /></label>
@@ -220,10 +221,17 @@ type Section = 'profile' | 'experience' | 'projects' | 'skills' | 'navigation' |
                   </section>
                   <section class="admin-form-section">
                     <div class="admin-section-heading"><div><h2>Media</h2><p>{{ project.images.length }} images</p></div><label class="admin-secondary admin-file-button">Add images<input type="file" multiple accept="image/jpeg,image/png,image/webp" (change)="uploadProjectImages($event, project)" /></label></div>
+                    @if (project.images.length) {
+                      <div class="admin-media-bulk" role="group" aria-label="Bulk image actions">
+                        <label class="admin-check"><input type="checkbox" [checked]="selectedImageCount(project) === project.images.length" [indeterminate]="selectedImageCount(project) > 0 && selectedImageCount(project) < project.images.length" (change)="toggleAllImages(project, $any($event.target).checked)" /><span>Select all</span></label>
+                        <span class="admin-media-bulk-count" aria-live="polite">{{ selectedImageCount(project) }} selected</span>
+                        <button type="button" class="admin-remove" [disabled]="!selectedImageCount(project) || busy()" (click)="deleteSelectedImages(project)">Remove selected</button>
+                      </div>
+                    }
                     <div class="admin-media-list">
                       @for (image of project.images; track image.src; let i = $index) {
-                        <div class="admin-media-row">
-                          <span class="admin-drag" aria-hidden="true">⠿</span>
+                        <div class="admin-media-row" [class.is-selected]="selectedImages().has(image.src)">
+                          <input type="checkbox" class="admin-media-select" [checked]="selectedImages().has(image.src)" [attr.aria-label]="'Select image ' + (i + 1) + (image.alt ? ': ' + image.alt : '')" (change)="toggleImage(image.src)" />
                           <img [src]="image.src" [alt]="image.alt" />
                           <label class="admin-field"><span>{{ i === 0 ? 'Cover image alt text' : 'Image alt text' }}</span><input [(ngModel)]="image.alt" [id]="'image-alt-' + i" [attr.aria-invalid]="invalidField() === 'image-alt-' + i" [attr.aria-describedby]="invalidField() === 'image-alt-' + i ? 'editor-error' : null" (ngModelChange)="markDirty()" /></label>
                           <div class="admin-media-actions"><button type="button" [disabled]="i === 0" [attr.aria-label]="'Move image ' + (i + 1) + ' up'" (click)="move(project.images, i, -1)">↑</button><button type="button" [disabled]="i === project.images.length - 1" [attr.aria-label]="'Move image ' + (i + 1) + ' down'" (click)="move(project.images, i, 1)">↓</button><button type="button" class="admin-remove" (click)="deleteImage(project, image, i)">Remove</button></div>
@@ -314,6 +322,7 @@ export class AdminContentComponent implements OnInit, OnDestroy {
   readonly message = signal<string | null>(null);
   readonly selectedExperience = signal(0);
   readonly selectedProject = signal(0);
+  readonly selectedImages = signal<ReadonlySet<string>>(new Set());
   readonly reorderMessage = signal('');
   readonly admin = inject(PortfolioAdminService);
   readonly previewOpen = signal(false);
@@ -584,6 +593,18 @@ export class AdminContentComponent implements OnInit, OnDestroy {
   async deleteImage(project: Project, image: MediaAsset, index: number): Promise<void> {
     if (!await this.confirmation.ask({ title: 'Remove image from draft?', description: 'Remove “' + image.alt + '” from this project? The stored file is retained so published content and previous revisions remain safe.', action: 'Remove image', danger: true })) return;
     this.rememberRemoval(); project.images.splice(index, 1); this.touch();
+  }
+
+  selectProject(index: number): void { this.selectedProject.set(index); this.selectedImages.set(new Set()); }
+  selectedImageCount(project: Project): number { const selected = this.selectedImages(); return project.images.filter(image => selected.has(image.src)).length; }
+  toggleImage(src: string): void { const next = new Set(this.selectedImages()); if (!next.delete(src)) next.add(src); this.selectedImages.set(next); }
+  toggleAllImages(project: Project, checked: boolean): void { this.selectedImages.set(checked ? new Set(project.images.map(image => image.src)) : new Set()); }
+
+  async deleteSelectedImages(project: Project): Promise<void> {
+    const selected = this.selectedImages(); const count = this.selectedImageCount(project); if (!count) return;
+    const label = count === 1 ? '1 image' : `${count} images`;
+    if (!await this.confirmation.ask({ title: `Remove ${label} from draft?`, description: `Remove ${label} from this project? The stored files are retained so published content and previous revisions remain safe.`, action: `Remove ${label}`, danger: true })) return;
+    this.rememberRemoval(); project.images = project.images.filter(image => !selected.has(image.src)); this.selectedImages.set(new Set()); this.touch();
   }
 
   async importJson(event: Event): Promise<void> {

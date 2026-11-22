@@ -12,7 +12,7 @@ import { MarqueeComponent } from '../components/marquee.component';
 import { NavComponent } from '../components/nav.component';
 import { ProjectsComponent } from '../components/projects.component';
 import { SkillsComponent } from '../components/skills.component';
-import { PortfolioContent, Project, projectSlug } from '../content';
+import { PortfolioContent, Project, projectSlug, publicContent } from '../content';
 import { PortfolioContentService } from '../services/portfolio-content.service';
 import { ScrollService } from '../services/scroll.service';
 
@@ -82,7 +82,7 @@ export class PortfolioPageComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.previewContent || this.params()?.get('project') || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.loaded.set(true); this.counter.set(100);
     }
-    if (this.previewContent) { this.scroll.preview = true; this.content.content.set(structuredClone(this.previewContent)); this.content.loading.set(false); }
+    if (this.previewContent) { this.scroll.preview = true; this.content.content.set(publicContent(structuredClone(this.previewContent))); this.content.loading.set(false); }
     else void this.content.load().then(() => {
       if (window.location.hash && !this.params()?.get('project')) requestAnimationFrame(() => this.scroll.scrollTo(window.location.hash));
     });
